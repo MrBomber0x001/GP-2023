@@ -8,6 +8,7 @@
 
 Don't ever mergin into main/master before doing a pull!
 hello
+hi
 
 ## Project structure
 
