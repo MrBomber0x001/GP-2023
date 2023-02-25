@@ -6,6 +6,8 @@
 
 3.
 
+Don't ever mergin into main/master before doing a pull!
+
 ## Project structure
 
 ```
