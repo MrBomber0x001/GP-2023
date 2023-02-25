@@ -33,3 +33,12 @@ test screenshots
 ## Contributions
 
 ## Resources
+
+## Logs
+
+- [ ] Authentication (Eslam)
+  - [ ] Signup
+  - [ ] Singin
+  - [ ] Forget password
+- [ ] Post Feature (Shefo)
+  - [x] CRUD
