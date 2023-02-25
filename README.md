@@ -43,6 +43,7 @@ test screenshots
 ## Logs
 
 - [ ] Setup Database schema
+- [ ] determine project core pages
 - [ ] Projet structure && type of database [nosql/sql]
 - [ ] Authentication (Eslam)
   - [ ] Signup
