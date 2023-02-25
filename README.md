@@ -42,6 +42,8 @@ test screenshots
 
 ## Logs
 
+- [ ] Setup Database schema
+- [ ] Projet structure && type of database [nosql/sql]
 - [ ] Authentication (Eslam)
   - [ ] Signup
   - [ ] Singin
