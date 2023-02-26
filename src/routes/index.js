@@ -1,0 +1,1 @@
+export * as authRoutes from './v1/auth.routes'
