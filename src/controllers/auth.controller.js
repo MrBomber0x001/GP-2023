@@ -7,7 +7,16 @@ export const signup = (req, res) => {
  * @author Yousef Meska
  * @description SignIn route
  * @param {req, res}
+ * @private
  */
 export const signIn = (req, res) => {
     // bla bla
+}
+
+/**
+ * 
+ * @param {*} _ 
+ */
+export const x = _ => {
+
 }

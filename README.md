@@ -58,8 +58,8 @@ test screenshots
 ## Tools
 
 - Render => postgres
-- Mongo Cloud Atlas => mongo
 - Postman
+- prisma => postgres
 
 ## Logs
 
@@ -80,7 +80,7 @@ test screenshots
   - Are we read or write intensive ? [choosing the right index]
   - choosing the right services [deployment, storage, ci/cd]
   - linting and coding style formatting
-  - contributing guidelines
+  - contributing guidelines [x]
   - dockerfile optimization [synk]
   - the right usage of events and webSockets
   - redis and webSockets conncetion
@@ -89,3 +89,28 @@ test screenshots
 
 - don't ever push into main
 - dont' ever push into develop [finish feature_branch => review (done) => merge into develop]
+- code documented
+
+USER:
+    - create account as client or applicant
+ROLES: [CLIENT, APPLICANT]
+APPLICANT
+
+Functional requirements For every entity
+CLIENT can do:
+    1.
+    2.
+    3.
+APPLICANT can do:
+    1.
+    2.
+    3.
+PAGES:
+    1.
+    2.
+    3.
+
+prototype!
+
+Authentication => registered
+onboarding
