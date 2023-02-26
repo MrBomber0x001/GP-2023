@@ -72,3 +72,12 @@ test screenshots
   - [ ] Forget password
 - [ ] Post Feature (Shefo)
   - [x] CRUD
+- [ ] Topics:
+  - CORS security
+  - Rate limiting
+  - SSL/TLS certificates
+  - How cachin goes in this situtation!
+  - are we read or write intensive ? [choosing the right index]
+  - choosing the right services [deployment, storage, ci/cd]
+  - linting and coding style formatting
+  - contributing guidelines
