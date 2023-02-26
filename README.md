@@ -124,28 +124,10 @@ PAGES:
 ---
 
 DATA:
-Job:
-
-1. Title -m
-2. Pricing -o
-4. Category -m
-5. Attachments(files , photos , ...) -o
-6. Desc -m
-Proposal:
-1. Comment
-User:
-1. Username -m
-2. E-mail -m
-3. Password -m
-4. Address -m
-5. Photo -o
-6. Contact -m
-7. Bio -m
-8. WorkExp -o
-9. Role -m
-Review:
-1. Rate -m
-2. Desc -o
+Job: 1. Title -m 2. Pricing -o 4. Category -m 5. Attachments(files , photos , ...) -o 6. Desc -m
+Proposal: 1. Comment
+User: 1. Username -m 2. E-mail -m 3. Password -m 4. Address -m 5. Photo -o 6. Contact -m 7. Bio -m 8. WorkExp -o 9. Role -m
+Reiwiew: 1. Rate -m 2. Desc -o
 
 prototype!
 
