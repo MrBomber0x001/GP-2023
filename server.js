@@ -1,10 +1,9 @@
 import express from 'express'
 import { config } from 'dotenv';
-import authRoutes from './routes/v1/auth.routes'
 import cors from 'cors';
 import helmet from 'helmet';
 import passport from 'passport';
-import { env, constants } from './config/constants'
+import { env, constants } from './src/config/constants'
 import morgan from 'morgan'
 import v1Routes from './routes/v1'
 config();

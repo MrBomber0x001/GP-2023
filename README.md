@@ -77,7 +77,10 @@ test screenshots
   - Rate limiting
   - SSL/TLS certificates
   - How cachin goes in this situtation!
-  - are we read or write intensive ? [choosing the right index]
+  - Are we read or write intensive ? [choosing the right index]
   - choosing the right services [deployment, storage, ci/cd]
   - linting and coding style formatting
   - contributing guidelines
+  - dockerfile optimization [synk]
+  - the right usage of events and webSockets
+  - redis and webSockets conncetion
