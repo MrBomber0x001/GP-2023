@@ -84,3 +84,8 @@ test screenshots
   - dockerfile optimization [synk]
   - the right usage of events and webSockets
   - redis and webSockets conncetion
+
+/*
+
+- don't ever push into main
+- dont' ever push into develop [finish feature_branch => review (done) => merge into develop]
