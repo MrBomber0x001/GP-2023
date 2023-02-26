@@ -2,10 +2,10 @@ import express from 'express'
 import { config } from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
-import passport from 'passport';
-import { env, constants } from './src/config/constants'
+// import { env, constants } from './src/config/constants.js'
 import morgan from 'morgan'
-import v1Routes from './routes/v1'
+// import v1Routes from './routes/v1'
+import authRoutes from './src/routes/v1/auth.routes.js'
 config();
 const app = express();
 
@@ -23,13 +23,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(helmet())
 // security: CORS protection
 app.use(cors({
-    origin: env.FRONTEND_URL
+    // origin: env.FRONTEND_URL
 }))
 
+// APP ROUTES
 
-
-app.use("/v1", v1Routes)
-const PORT = process.env || 3000
+app.use("/", authRoutes)
+const { PORT } = process.env || 3000
 app.listen(3000, () => {
-    console.log(`:rocket: server is running on port ${PORT}`);
+    console.log(`server is running on port ${PORT}`);
 })
