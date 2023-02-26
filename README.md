@@ -11,14 +11,45 @@ Don't ever mergin into main/master before doing a pull!
 ## Project structure
 
 ```
-📦📦src
+📦src
+ ┣ 📂config
+ ┃ ┣ 📜constants.js
+ ┃ ┣ 📜firebase.js
+ ┃ ┣ 📜logger.js
+ ┃ ┣ 📜multer.js
+ ┃ ┣ 📜redis.js
+ ┃ ┗ 📜sendGrid.js
  ┣ 📂controllers
- ┃ ┗ 📜index.js
+ ┃ ┣ 📜auth.controller.js
+ ┃ ┣ 📜index.js
+ ┃ ┣ 📜job.controller.js
+ ┃ ┣ 📜review.controller.js
+ ┃ ┗ 📜user.controller.js
  ┣ 📂helpers
  ┃ ┗ 📜index.js
+ ┣ 📂middlewares
+ ┃ ┗ 📜jwt.js
  ┣ 📂routes
+ ┃ ┣ 📂v1
+ ┃ ┃ ┣ 📜auth.routes.js
+ ┃ ┃ ┣ 📜job.routes.js
+ ┃ ┃ ┣ 📜review.routes.js
+ ┃ ┃ ┗ 📜user.routes.js
  ┃ ┗ 📜index.js
+ ┣ 📂services
+ ┃ ┗ 📜index.js
+ ┗ 📂validations
+ ┣ 📜.dockerignore
  ┣ 📜.editorconfig
+ ┣ 📜.env
+ ┣ 📜.gitignore
+ ┣ 📜Dockerfile
+ ┣ 📜env.example
+ ┣ 📜index.js
+ ┣ 📜Makefile
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┣ 📜README.md
  ┗ 📜server.js
 ```
 
@@ -66,6 +97,8 @@ test screenshots
 - [ ] Setup Database schema
 - [ ] determine project core pages
 - [ ] Projet structure && type of database [nosql/sql]
+- [ ] Async wrapper
+- [ ] How migrations in teams work
 - [ ] Authentication (Eslam)
   - [ ] Signup
   - [ ] Singin
@@ -124,7 +157,7 @@ PAGES:
 ---
 
 DATA:
-<<<<<<< HEAD
+
 Job:
 
 1. Title -m
@@ -151,9 +184,7 @@ Review:
 Job: 1. Title -m 2. Pricing -o 4. Category -m 5. Attachments(files , photos , ...) -o 6. Desc -m 7. status -m
 Proposal: 1. Comment
 User: 1. Username -m 2. E-mail -m 3. Password -m 4. Address -m 5. Photo -o 6. Contact -m 7. Bio -m 8. WorkExp -o 9. Role -m
-Reiwiew: 1. Rate -m 2. Desc -o
-
->>>>>>> 33eefa4705d82b2088f8c175c14abffd582bb97e
+Review: 1. Rate -m 2. Desc -o
 
 prototype!
 
