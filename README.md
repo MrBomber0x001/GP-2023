@@ -6,25 +6,6 @@
 
 3.
 
-> Don't ever mergin into main/master before doing a pull!
-
-## Dependecies
-
-```
-bcrypt
-jsonwebtoken
-express
-prisma
-dotenv
-joi
-multer
-uuid
-```
-
-## documentation
-
-Postman documentation
-
 ## Project structure
 
 ```
