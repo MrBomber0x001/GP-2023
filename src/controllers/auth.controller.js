@@ -1,22 +1,14 @@
-export const signup = (req, res) => {
-    res.send("welcome");
-}
-
+import prisma from "../config/prisma.js"
 /**
- * 
- * @author Yousef Meska
- * @description SignIn route
- * @param {req, res}
- * @private
+ * @Author Shefo
+ * @desc ....
+ * @access public
+ * @endpoint POST `base/auth/register`
  */
-export const signIn = (req, res) => {
-    // bla bla
+export const signup = () => {
+    //FIXME: fix this implementation - signup
 }
 
-/**
- * 
- * @param {*} _ 
- */
-export const x = _ => {
 
-}
+
+// TODO: don't forget to do validation
