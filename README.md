@@ -1,13 +1,5 @@
 # Intro
 
-1.
-
-2.
-
-3.
-
-Don't ever mergin into main/master before doing a pull!
-
 ## Project structure
 
 ```
@@ -121,10 +113,6 @@ test screenshots
   - dockerfile optimization [synk]
   - the right usage of events and webSockets
   - redis and webSockets conncetion
-
-- don't ever push into main
-- dont' ever push into develop [finish feature_branch => review (done) => merge into develop]
-- code documented
 
 USER: - create account as client or applicant
 ROLES: [CLIENT, APPLICANT]

@@ -12,8 +12,8 @@ datasource db {
 
 model User {
     id        Int     @id @default(autoincrement())
-    firstname String
-    lastname  String
+    firstname String  @db.VarChar(60)
+    lastname  String  @db.VarChar(60)
     username  String  @unique
     email     String
     password  String
@@ -21,7 +21,7 @@ model User {
     address   String?
     img_url   String?
     contant   Int
-    role      ROLE
+    role      ROLE    @default(APPLICANT)
 }
 
 enum ROLE {
@@ -68,4 +68,27 @@ model WorkExperience {
     to_year   Int
     position  String
     // still_working!
+}
+
+model Product {
+    id    Int     @id @default(autoincrement())
+    name  String
+    photo Photo[]
+}
+
+model Photo {
+    id        Int      @id @default(autoincrement())
+    height    Int
+    name      String
+    width     Int
+    url       String
+    Product   Product? @relation(fields: [productId], references: [id])
+    productId Int?
+}
+
+// frontend should use cloudinary
+model attatchments {
+    id   Int    @id @default(autoincrement())
+    name String
+    url  String
 }
