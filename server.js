@@ -29,6 +29,15 @@ app.use(cors({
 // APP ROUTES
 
 app.use("/", authRoutes)
+
+
+// Error Handling
+
+app.use((err, req, res, next) => {
+    // extract status and messsage then return response to the user
+    const { statusCode, message } = err
+    return res.status(statusCode).send(message)
+})
 const { PORT } = process.env || 3000
 app.listen(3000, () => {
     console.log(`server is running on port ${PORT}`);
