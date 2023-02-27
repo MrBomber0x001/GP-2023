@@ -11,10 +11,61 @@ datasource db {
 }
 
 model User {
-    id        Int    @id @default(autoincrement())
+    id        Int     @id @default(autoincrement())
     firstname String
     lastname  String
-    username  String @unique
+    username  String  @unique
     email     String
     password  String
+    bio       String?
+    address   String?
+    img_url   String?
+    contant   Int
+    role      ROLE
+}
+
+enum ROLE {
+    ADMIN
+    CLIENT
+    APPLICANT
+}
+
+// Every job relies under a category
+// Every job could have many attatchments
+model Job {
+    id          Int     @id @default(autoincrement())
+    title       String
+    description String?
+    pricing     Int
+    status      Boolean //['closed', 'opened'] use enums instead
+}
+
+enum STATUS {
+    OPEN // 0
+    CLOSED // 1 
+    RUNNING // 2
+}
+
+model Category {
+    id    Int    @id @default(autoincrement())
+    title String
+}
+
+model Propoal {
+    id   Int    @id @default(autoincrement())
+    body String
+}
+
+model Review {
+    id   Int    @id @default(autoincrement())
+    body String
+    rate Int //[0-5]
+}
+
+model WorkExperience {
+    id        Int    @id @default(autoincrement())
+    from_year Int
+    to_year   Int
+    position  String
+    // still_working!
 }
