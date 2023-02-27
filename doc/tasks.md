@@ -1,0 +1,4 @@
+- branch [`feature/auth`]:
+  - [Eslam] Login - Authentication middleware (isAdmin()) - token [don't save in db]
+  - [Shefo] Register - DB structure
+  - [] Error Handling
