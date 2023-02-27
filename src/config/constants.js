@@ -1,22 +1,22 @@
 // import { config } from 'dotenv'
-// export const env = {
-//     NODE_ENV: process.env.NODE_ENV,
-//     PORT: process.env.PORT || 3000,
-//     SECRET: process.env.SECRET,
-//     MONGO_URI: process.env.MONGO_URI,
-//     REDIS_HOST: process.env.REDIS_HOST,
-//     REDIS_PORT: process.env.REDIS_PORT,
-//     REDIS_PASSWORD: process.env.REDIS_PASSWORD,
-//     // FIREBASE_SERVICE_ACCOUNT: JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT),
-//     GCS_BUCKET: process.env.GCS_BUCKET,
-//     EMAIL_FROM: process.env.EMAIL_FROM,
-//     EMAIL_USERNAME: process.env.EMAIL_USERNAME,
-//     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-//     FRONTEND_URL: process.env.FRONTEND_URL,
-//     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
-//     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
-//     SENTRY_DSN: process.env.SENTRY_DSN
-// };
+export const env = {
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT || 3000,
+    SECRET: process.env.SECRET,
+    MONGO_URI: process.env.MONGO_URI,
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    FIREBASE_SERVICE_ACCOUNT: JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT),
+    GCS_BUCKET: process.env.GCS_BUCKET,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+    EMAIL_USERNAME: process.env.EMAIL_USERNAME,
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
+    FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
+    SENTRY_DSN: process.env.SENTRY_DSN
+};
 
 // export const constants = {
 //     MAX_FILE_SIZE: 1024 * 1024 * 5, // 5MB
