@@ -1,31 +1,42 @@
 
-
+import bcrypt from 'bcrypt'
 import prisma from "../config/prisma.js";
-
+import { signToken } from '../middlewares/jwt.js';
+import { ErrorResponse } from '../utils/createError.js';
 //TODO: validate the input
 /**
  * @author Meska 
  * @desc [POST] user signup 
  * @access public
  */
-export const signup = async (req, res) => {
-    // const { firstname, lastname, email, password } = req.body;
-    const userExist = await prisma.user.findFirst({
-        where: {
-            email: req.body.email
-        }
-    })
+export const signup = async (req, res, next) => {
+    try {
+        // const { firstname, lastname, email, password } = req.body;
+        const doesExist = await prisma.user.findFirst({
+            where: {
+                email: req.body.email
+            }
+        })
 
-    if (userExist) {
-        return res.send({ message: `user already exist!`, statusCode: 404, data: [] });
-    }
-    console.log(userExist);
-    const newUser = await prisma.user.create({
-        data: {
-            ...req.body
+        if (doesExist) {
+            return res.status(400).send({ message: `user already exist!`, data: [] });
         }
-    })
-    return res.send({ data: newUser, message: `user has been created successfully`, statusCode: 201 })
+
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await prisma.user.create({
+            data: {
+                ...req.body,
+                password: hashedPassword
+            }
+        })
+
+        const token = signToken(newUser.id)
+        return res.status(201).send({ success: true, token })
+    } catch (error) {
+        return next(new ErrorResponse(`Something bad happended: ${error.message}`, 500));
+    }
 }
 
 /**
@@ -36,16 +47,37 @@ export const signup = async (req, res) => {
  * @access public
  */
 export const signIn = async (req, res) => {
-    const doesExist = await prisma.user.findFirst({
-        where: {
-            email: req.body.email
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                email: req.body.email
+            }
+        })
+        if (!user) {
+            return res.status(404).send({ message: `user is not found!`, data: [] })
         }
-    })
-    if (!doesExist) {
-        return res.send({ message: `wrong Email/Password`, data: [], statusCode: 404 })
-    }
 
-    return res.send({ message: 'here you are', data: doesExist, statusCode: 200 })
+        // check for password validity
+        const isValid = await bcrypt.compare(password, user.password)
+
+        if (!isValid) {
+            return res.status(400).json({ success: false, message: 'email/password are invalid!' })
+        }
+
+        // Sign a tokne
+        let userObj = {
+            id: user.id,
+            role: user.role
+        }
+        const token = signToken(userObj)
+
+        return res.status(200).send({ message: 'Logged In successfully', data: user, token })
+    } catch (error) {
+        return next(new ErrorResponse(`Something bad happened: ${error.messag}`, 500))
+    }
 }
 
 
+export const resetPassword = async (req, res) => {
+
+}
