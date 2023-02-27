@@ -1,4 +1,4 @@
-import winston from 'winston';
+/*import winston from 'winston';
 import Sentry from 'winston-transport-sentry-node'
 import { env } from './constants';
 
@@ -25,4 +25,4 @@ if (env.NODE_ENV === `production`) {
     )
 }
 
-export default logger
+export default logger */

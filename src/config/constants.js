@@ -1,6 +1,7 @@
-require("dotenv").config();
+/*import { config } from 'dotenv';
+config();
 
-module.exports.env = {
+export const env = {
     NODE_ENV: process.env.NODE_ENV,
     PORT: process.env.PORT || 3000,
     SECRET: process.env.SECRET,
@@ -19,7 +20,7 @@ module.exports.env = {
     SENTRY_DSN: process.env.SENTRY_DSN
 };
 
-module.exports.constants = {
+export const constants = {
     MAX_FILE_SIZE: 1024 * 1024 * 5, // 5MB
     MAX_SIGNED_URL_EXPIRATION: 60 * 60 * 24 * 2, // 2 Days
     SESSION_COOKIE_MAX_AGE: 1000 * 60 * 60 * 24 * 14, // 2 Weeks
@@ -42,3 +43,5 @@ module.exports.constants = {
     LESSONS_FOLDER: "lessons",
     MAX_ACCESS_CODES_PER_REQUEST: 1000
 };
+
+*/
