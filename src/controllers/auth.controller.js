@@ -76,7 +76,7 @@ export const signup = async (req, res) => {
  * @endpoint POST `base/auth/login`
  * @param {string} email
  * @param {string} password
- * @returns {object} user, token
+ * @returns {object} token
  */
 export const login = async (req, res) => {
     try {
@@ -108,18 +108,14 @@ export const login = async (req, res) => {
             });
         }
 
-        // sign token
-        //FIXME: sign token with{id, role} and send only the token, no need for sending the user object
-        const token = signToken(user.id);
+        // sign token with {id, role}
+        const token = signToken(user.id, user.role);
 
-        // return user and token
+        // return token
         return res.status(200).json({
             status: "success",
             message: "Logged in successfully",
-            data: {
-                user,
-                token,
-            },
+            token,
         });
     } catch (error) {
         console.error(error);
@@ -129,4 +125,3 @@ export const login = async (req, res) => {
         });
     }
 };
-

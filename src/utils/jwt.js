@@ -5,14 +5,15 @@ dotenv.config();
 
 /**
  * @Author Eslam
- * @desc sign token
+ * @desc sign token with user id and role
  * @access private
  * @param {number} id
+ * @param {string} role
  * @returns {string} token
  */
 
-export const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+export const signToken = (id, role) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
 };

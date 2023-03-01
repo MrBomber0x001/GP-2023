@@ -9,14 +9,22 @@
  */
 
 const isAdmin = (req, res, next) => {
-    if (req.user.role === "admin") {
-        next();
-    } else {
+    // check if user is admin
+    if (req.user.role !== "admin") {
         return res.status(401).json({
             status: "error",
             message: "Unauthorized",
         });
     }
+
+    // serialize user info into reqeust object
+    req.user = {
+        id: req.user.id,
+        role: req.user.role,
+    };
+
+    // call next middleware
+    next();
 };
 
 module.exports = {
