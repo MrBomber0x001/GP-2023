@@ -12,6 +12,7 @@ dotenv.config();
  * @desc Signup handler
  * @access public
  * @endpoint POST `base/auth/register`
+ * @returns {object} user, token
  */
 export const signup = async (req, res) => {
     const { firstName, lastName, email, password, password2 } = req.body;
