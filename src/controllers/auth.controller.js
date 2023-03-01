@@ -2,6 +2,7 @@ import prisma from "../config/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { signToken } from "../utils/jwt.js";
 
 dotenv.config();
 
@@ -57,8 +58,8 @@ export const login = async (req, res) => {
             });
         }
 
-        // generate token
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+        // sign token
+        const token = signToken(user.id);
 
         // return user and token
         return res.status(200).json({
