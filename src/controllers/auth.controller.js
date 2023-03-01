@@ -38,6 +38,7 @@ export const signup = async (req, res) => {
     }
     try {
         // Check for existing email
+        //FIXME: change const to let, because you've changed it below!
         const user = await prisma.user.findUnique({ where: { email: email } });
         if (user) {
             errors.push({ message: "email already exist!" });
@@ -55,6 +56,7 @@ export const signup = async (req, res) => {
                 },
             });
 
+            //FIXME: You should sign in a token, with {id, role} and send it on the `res`
             res.status(200).json({ message: "User created" });
         }
     } catch (error) {
@@ -106,6 +108,7 @@ export const login = async (req, res) => {
         }
 
         // sign token
+        //FIXME: sign token with{id, role} and send only the token, no need for sending the user object
         const token = signToken(user.id);
 
         // return user and token
