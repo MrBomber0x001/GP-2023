@@ -3,20 +3,68 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { signToken } from "../utils/jwt.js";
+import { isEmailValid } from "../utils/helpers";
 
 dotenv.config();
 
 /**
  * @Author Shefo
- * @desc ....
+ * @desc Signup handler
  * @access public
  * @endpoint POST `base/auth/register`
  */
-export const signup = () => {
-    //FIXME: fix this implementation - signup
-};
+export const signup = async (req, res) => {
+    const { firstName, lastName, email, password, password2 } = req.body;
+    const errors = [];
 
-// TODO: don't forget to do validation
+    // Check required fields
+    if (!firstName || !lastName || !email || !password || !password2) {
+        errors.push({ message: "Please fill in all fields!" });
+    }
+
+    // Check email  valid
+    if (!isEmailValid(email)) {
+        errors.push({ message: "Email not valid!" });
+    }
+
+    // Check password match
+    if (password !== password2) {
+        errors.push({ message: "Passwords do not match!" });
+    }
+
+    // Check passwprd length
+    if (password.length < 6) {
+        errors.push({ message: "Password should be at least 6 characters!" });
+    }
+    try {
+        // Check for existing email
+        const user = await prisma.user.findUnique({ where: { email: email } });
+        if (user) {
+            errors.push({ message: "email already exist!" });
+        }
+
+        if (errors.length > 0) {
+            res.status(400).json(errors);
+        } else {
+            user = await prisma.user.create({
+                data: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: bcrypt.hash(password, 10),
+                },
+            });
+
+            res.status(200).json({ message: "User created" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+        });
+    }
+};
 
 /**
  * @Author Eslam
@@ -27,7 +75,6 @@ export const signup = () => {
  * @param {string} password
  * @returns {object} user, token
  */
-
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -71,10 +118,11 @@ export const login = async (req, res) => {
             },
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error",
         });
     }
 };
+
