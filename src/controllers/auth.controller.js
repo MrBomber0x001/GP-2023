@@ -15,52 +15,55 @@ dotenv.config();
  * @returns {object} user, token
  */
 export const signup = async (req, res) => {
-    const { firstName, lastName, email, password, password2 } = req.body;
-    const errors = [];
+    const { firstName, lastName, email, password } = req.body;
 
     // Check required fields
-    if (!firstName || !lastName || !email || !password || !password2) {
-        errors.push({ message: "Please fill in all fields!" });
+    if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({
+            status: "error",
+            message: "Please fill in all fields!",
+        });
     }
 
     // Check email  valid
     if (!isEmailValid(email)) {
-        errors.push({ message: "Email not valid!" });
-    }
-
-    // Check password match
-    if (password !== password2) {
-        errors.push({ message: "Passwords do not match!" });
+        return res.status(400).json({
+            status: "error",
+            message: "Email not valid!",
+        });
     }
 
     // Check passwprd length
     if (password.length < 6) {
-        errors.push({ message: "Password should be at least 6 characters!" });
+        return res.status(400).json({
+            status: "error",
+            message: "Password should be at least 6 characters!",
+        });
     }
     try {
         // Check for existing email
         //Done => FIXME: change const to let, because you've changed it below!
         let user = await prisma.user.findUnique({ where: { email: email } });
+        console.log(user);
         if (user) {
-            errors.push({ message: "email already exist!" });
-        }
-
-        if (errors.length > 0) {
-            res.status(400).json(errors);
-        } else {
-            user = await prisma.user.create({
-                data: {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: bcrypt.hash(password, 10),
-                },
+            return res.status(400).json({
+                status: "error",
+                message: "User found!",
             });
-
-            //Done => FIXME: You should sign in a token, with {id, role} and send it on the `res`
-            const token = signToken(user.id, user.role);
-            res.status(200).json({ message: "User created", token: token });
         }
+
+        user = await prisma.user.create({
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: (await bcrypt.hash(password, 10)).toString(),
+            },
+        });
+
+        //Done => FIXME: You should sign in a token, with {id, role} and send it on the `res`
+        //const token = signToken(user.id, user.role);
+        res.status(200).json({ message: "User created" });
     } catch (error) {
         console.error(error);
         return res.status(500).json({
