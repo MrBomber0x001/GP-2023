@@ -14,6 +14,9 @@ Done:
 Shefo, You still haven't started yet, so begin with setup prisma you'll find the link of the db server on .env.example and use test if it's working or not
 
 check if it's ok or not => Eslam, Have you serialized user into the request object `req` because in `isAdmin()` You've used `req.user.role`?
+
+Done:
 Shefo, Move `isEmailValid` into validations folder.
 
 ## tracking
+

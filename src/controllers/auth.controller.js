@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { signToken } from "../utils/jwt.js";
-import { isEmailValid } from "../utils/helpers";
+import { isEmailValid } from "../validations/auth.validation";
 
 dotenv.config();
 
@@ -39,8 +39,8 @@ export const signup = async (req, res) => {
     }
     try {
         // Check for existing email
-        //FIXME: change const to let, because you've changed it below!
-        const user = await prisma.user.findUnique({ where: { email: email } });
+        //Done => FIXME: change const to let, because you've changed it below!
+        let user = await prisma.user.findUnique({ where: { email: email } });
         if (user) {
             errors.push({ message: "email already exist!" });
         }
@@ -57,8 +57,9 @@ export const signup = async (req, res) => {
                 },
             });
 
-            //FIXME: You should sign in a token, with {id, role} and send it on the `res`
-            res.status(200).json({ message: "User created" });
+            //Done => FIXME: You should sign in a token, with {id, role} and send it on the `res`
+            const token = signToken(user.id, user.role);
+            res.status(200).json({ message: "User created", token: token });
         }
     } catch (error) {
         console.error(error);
@@ -125,3 +126,4 @@ export const login = async (req, res) => {
         });
     }
 };
+
