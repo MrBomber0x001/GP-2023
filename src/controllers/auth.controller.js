@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { signToken } from "../utils/jwt.js";
-import { isEmailValid } from "../validations/auth.validation";
+import { isEmailValid } from "../validations/auth.validation.js";
 
 dotenv.config();
 

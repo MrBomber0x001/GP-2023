@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import morgan from "morgan";
 import prisma from "./src/config/prisma.js";
 import v1Routes from "./src/routes/v1/auth.routes.js";
+import notFound from "./src/middlewares/notFoundMiddleware.js";
 
 config();
 
@@ -30,6 +31,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/v1/auth", v1Routes);
+
+// Not found middleware
+app.use(notFound);
 
 // ERROR handling
 
