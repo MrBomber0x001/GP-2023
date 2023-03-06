@@ -1,5 +1,5 @@
-import { CustomeAPIError } from "./customeError";
-import { httpStatusCodes } from "./httpStatusCode";
+import { CustomeAPIError } from "./customeError.js";
+import { httpStatusCodes } from "./httpStatusCode.js";
 
 export class NotFoundError extends CustomeAPIError {
     constructor(message) {
@@ -7,4 +7,6 @@ export class NotFoundError extends CustomeAPIError {
         this.statusCode = httpStatusCodes.NOT_FOUND;
     }
 }
+
+export default NotFoundError;
 

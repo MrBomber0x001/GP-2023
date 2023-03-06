@@ -1,14 +1,14 @@
-const CustomAPIError = require("./customeError");
-const BadRequestError = require("./badRequest");
-const NotFoundError = require("./notFound");
-const UnAuthorizededError = require("./unAuthorizeded");
-const httpStatusCodes = require("./httpStatusCode");
+import CustomAPIError from "./customeError.js";
+import BadRequestError from "./badRequest.js";
+import NotFoundError from "./notFound.js";
+import UnAuthorizededError from "./unAuthorizeded.js";
+import httpStatusCodes from "./httpStatusCode.js";
 
-
-module.exports = {
-  CustomAPIError,
-  BadRequestError,
-  NotFoundError,
-  UnAuthorizededError,
-  httpStatusCodes,
+export {
+    CustomAPIError,
+    BadRequestError,
+    NotFoundError,
+    UnAuthorizededError,
+    httpStatusCodes,
 };
+

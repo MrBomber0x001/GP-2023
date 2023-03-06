@@ -8,6 +8,7 @@ import morgan from "morgan";
 import prisma from "./src/config/prisma.js";
 import v1Routes from "./src/routes/v1/auth.routes.js";
 import notFound from "./src/middlewares/notFoundMiddleware.js";
+import errorHandlerMiddleware from "./src/middlewares/errorHandler.js";
 
 config();
 
@@ -36,6 +37,7 @@ app.use("/api/v1/auth", v1Routes);
 app.use(notFound);
 
 // ERROR handling
+app.use(errorHandlerMiddleware);
 
 const { PORT } = process.env || 3000;
 app.listen(3000, () => {

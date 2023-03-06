@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { signToken } from "../utils/jwt.js";
 import { isEmailValid } from "../validations/auth.validation.js";
+import {
+    BadRequestError,
+    UnAuthorizededError,
+    httpStatusCodes,
+} from "../error/index.js";
 
 dotenv.config();
 
@@ -14,42 +19,33 @@ dotenv.config();
  * @endpoint POST `base/auth/register`
  * @returns {object} user, token
  */
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
 
-    // Check required fields
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({
-            status: "error",
-            message: "Please fill in all fields!",
-        });
-    }
-
-    // Check email  valid
-    if (!isEmailValid(email)) {
-        return res.status(400).json({
-            status: "error",
-            message: "Email not valid!",
-        });
-    }
-
-    // Check passwprd length
-    if (password.length < 6) {
-        return res.status(400).json({
-            status: "error",
-            message: "Password should be at least 6 characters!",
-        });
-    }
     try {
+        // Check required fields
+        if (!firstName || !lastName || !email || !password) {
+            throw new BadRequestError("Please fill in all fields!");
+        }
+
+        // Check email  valid
+        if (!isEmailValid(email)) {
+            throw new BadRequestError("Email not valid!");
+        }
+
+        // Check passwprd length
+        if (password.length < 6) {
+            throw new BadRequestError(
+                "Password should be at least 6 characters!"
+            );
+        }
+
         // Check for existing email
         //Done => FIXME: change const to let, because you've changed it below!
         let user = await prisma.user.findUnique({ where: { email: email } });
         console.log(user);
         if (user) {
-            return res.status(400).json({
-                status: "error",
-                message: "Email already exist!",
-            });
+            throw new BadRequestError("Email already exist!");
         }
 
         user = await prisma.user.create({
@@ -63,13 +59,12 @@ export const signup = async (req, res) => {
 
         //Done => FIXME: You should sign in a token, with {id, role} and send it on the `res`
         const token = signToken(user.id, user.role);
-        res.status(200).json({ message: "User created", token: token });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            status: "error",
-            message: "Internal server error",
+        res.status(httpStatusCodes.OK).json({
+            message: "User created",
+            token: token,
         });
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -82,51 +77,37 @@ export const signup = async (req, res) => {
  * @param {string} password
  * @returns {object} token
  */
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
         // validate email and password are not empty
         if (!email || !password) {
-            return res.status(400).json({
-                status: "error",
-                message: "Email and password are required",
-            });
+            throw new BadRequestError("Email and password are required!");
         }
 
         // check if user exists
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
-            return res.status(400).json({
-                status: "error",
-                message: "Invalid credentials",
-            });
+            throw new UnAuthorizededError("Invalid Credentials!");
         }
 
         // check if password is correct
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
-            return res.status(400).json({
-                status: "error",
-                message: "Invalid credentials",
-            });
+            throw new UnAuthorizededError("Invalid Credentials!");
         }
 
         // sign token with {id, role}
         const token = signToken(user.id, user.role);
 
         // return token
-        return res.status(200).json({
-            status: "success",
+        return res.status(httpStatusCodes.OK).json({
             message: "Logged in successfully",
             token,
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            status: "error",
-            message: "Internal server error",
-        });
+        next(error);
     }
 };
 

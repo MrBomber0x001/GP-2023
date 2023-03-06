@@ -4,3 +4,5 @@ export class CustomeAPIError extends Error {
     }
 }
 
+export default CustomeAPIError;
+

@@ -1,4 +1,4 @@
-import { httpStatusCodes } from "./httpStatusCode";
+import { httpStatusCodes } from "../error/httpStatusCode.js";
 
 const errorHandlerMiddleware = (err, req, res, next) => {
     const customeError = {
@@ -12,5 +12,5 @@ const errorHandlerMiddleware = (err, req, res, next) => {
         .json({ Error: customeError.message });
 };
 
-module.exports = errorHandlerMiddleware;
+export default errorHandlerMiddleware;
 

@@ -1,5 +1,5 @@
-import { CustomeAPIError } from "./customeError";
-import { httpStatusCodes } from "./httpStatusCode";
+import { CustomeAPIError } from "./customeError.js";
+import { httpStatusCodes } from "./httpStatusCode.js";
 
 export class BadRequestError extends CustomeAPIError {
     constructor(message) {
@@ -7,4 +7,6 @@ export class BadRequestError extends CustomeAPIError {
         this.statusCode = httpStatusCodes.BAD_REQUEST;
     }
 }
+
+export default BadRequestError;
 
