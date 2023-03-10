@@ -1,5 +1,7 @@
 import { prisma } from "../config/prisma.js";
 import { verifyToken } from "../utils/jwt";
+import dotenv from "dotenv";
+dotenv.config();
 
 /**
  * @Author Eslam
@@ -99,3 +101,4 @@ module.exports = {
     isAdmin,
     isAuthenticated,
 };
+

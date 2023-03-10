@@ -17,11 +17,16 @@ model User {
   email     String    @unique
   password  String    
   image     String?    
-  location  String?    @db.VarChar(150)
-  role      Bytes?
+  location  String?   @db.VarChar(150)
+  role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   services  Service[]     
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Category {
