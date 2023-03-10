@@ -1,36 +1,37 @@
 {
-  "name": "gp-2023",
-  "version": "1.0.0",
-  "description": "graduation project",
-  "type": "module",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon ./server.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@prisma/client": "^4.10.1",
-    "bcrypt": "^5.1.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "ioredis": "^5.3.1",
-    "jsonwebtoken": "^9.0.0",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "passport": "^0.6.0",
-    "prisma": "^4.10.1",
-    "typescript": "^4.9.5",
-    "winston": "^3.8.2",
-    "winston-transport-sentry-node": "^2.7.0"
-  },
-  "devDependencies": {
-    "@types/node": "^18.14.2",
-    "ts-node": "^10.9.1"
-  }
+    "name": "gp-2023",
+    "version": "1.0.0",
+    "description": "graduation project",
+    "type": "module",
+    "main": "./src/server.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "start": "node ./src/server.js",
+        "start:dev": "nodemon ./server.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@prisma/client": "^4.10.1",
+        "bcrypt": "^5.1.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "ioredis": "^5.3.1",
+        "jsonwebtoken": "^9.0.0",
+        "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
+        "passport": "^0.6.0",
+        "prisma": "^4.10.1",
+        "typescript": "^4.9.5",
+        "winston": "^3.8.2",
+        "winston-transport-sentry-node": "^2.7.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.14.2",
+        "ts-node": "^10.9.1"
+    }
 }
+
