@@ -85,4 +85,6 @@ test screenshots
 ## deploy link
 
 -   Base URL : https://gp-2023-testing.onrender.com
+-   Login => /api/v1/auth/login
+-   Signup => /api/v1/auth/signup
 
