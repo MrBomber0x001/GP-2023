@@ -22,10 +22,7 @@ const isAuthenticated = async (req, res, next) => {
 
         // check if no token
         if (!token) {
-            return res.status(401).json({
-                status: "error",
-                message: "Unauthorized",
-            });
+            throw new UnAuthorizededError("Invalid Credentials!");
         }
 
         // verify token
@@ -33,10 +30,7 @@ const isAuthenticated = async (req, res, next) => {
 
         // check if token is invalid
         if (decoded instanceof Error) {
-            return res.status(401).json({
-                status: "error",
-                message: "Unauthorized",
-            });
+            throw new UnAuthorizededError("Unauthorized!");
         }
 
         // check if user exists
@@ -56,11 +50,8 @@ const isAuthenticated = async (req, res, next) => {
         // call next middleware
         next();
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            status: "error",
-            message: "Internal server error",
-        });
+        console.log(error);
+        next(error);
     }
 };
 
@@ -80,20 +71,14 @@ const isAdmin = async (req, res, next) => {
     try {
         // check if user is admin
         if (req.user.role !== "admin") {
-            return res.status(401).json({
-                status: "error",
-                message: "Unauthorized",
-            });
+            throw new UnAuthorizededError("Unauthorized!");
         }
 
         // call next middleware
         next();
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            status: "error",
-            message: "Internal server error",
-        });
+        console.log(error);
+        next(error);
     }
 };
 
