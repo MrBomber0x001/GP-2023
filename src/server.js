@@ -7,8 +7,10 @@ import { config } from "dotenv";
 import morgan from "morgan";
 import prisma from "./config/prisma.js";
 import v1Routes from "./routes/v1/auth.routes.js";
+import adminRoutes from "./routes/v1/admin/category.routes.js";
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
+import { isAuthenticated, isAdmin } from "./middlewares/auth.js";
 
 config();
 
@@ -32,6 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/v1/auth", v1Routes);
+app.use("/api/v1/admin", adminRoutes);
 
 // Not found middleware
 app.use(notFound);
@@ -43,4 +46,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
-
