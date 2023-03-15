@@ -122,15 +122,9 @@ export const createCategory = async (req, res, next) => {
             throw new BadRequestError("Invalid name!");
         }
 
-        // validate desc
-        if (!req.body.desc) {
-            throw new BadRequestError("Invalid desc!");
-        }
-
         const category = await prisma.category.create({
             data: {
                 name: req.body.name,
-                desc: req.body.desc,
             },
         });
 
@@ -167,11 +161,6 @@ export const updateCategory = async (req, res, next) => {
             throw new BadRequestError("Invalid name!");
         }
 
-        // validate desc
-        if (!req.body.desc) {
-            throw new BadRequestError("Invalid desc!");
-        }
-
         // check if category not found
         const category = await prisma.category.findUnique({
             where: { id: req.params.id },
@@ -185,7 +174,6 @@ export const updateCategory = async (req, res, next) => {
             where: { id: req.params.id },
             data: {
                 name: req.body.name,
-                desc: req.body.desc,
             },
         });
 
