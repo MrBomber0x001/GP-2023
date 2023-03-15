@@ -1,6 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
-// import cors from 'cors';
+import cors from "cors";
 // // import helmet from 'helmet';
 // // import passport from 'passport';
 // // import { env, constants } from './src/config/constants'
