@@ -9,6 +9,8 @@ import prisma from "./config/prisma.js";
 import v1Routes from "./routes/v1/auth.routes.js";
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
+import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
+import { isAdmin } from "./middlewares/auth.js";
 
 config();
 
@@ -31,6 +33,7 @@ app.use(cors());
 
 // Routes
 app.use("/api/v1/auth", v1Routes);
+app.use("/api/v1/admin", subCatRoute);
 
 // Not found middleware
 app.use(notFound);

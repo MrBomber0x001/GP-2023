@@ -88,8 +88,9 @@ export const login = async (req, res, next) => {
 
         // check if user exists
         const user = await prisma.user.findUnique({ where: { email } });
+        console.log(user);
         if (!user) {
-            throw new UnAuthorizededError("Invalid Credentials!");
+            throw new UnAuthorizededError("Invalid Credentials user!");
         }
 
         // check if password is correct

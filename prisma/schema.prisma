@@ -32,7 +32,6 @@ enum Role {
 model Category {
   id        String          @id @default(uuid())
   name      String          @db.VarChar(50)
-  desc      String          @db.VarChar(500)
   subCats   Sub_Category[]     
   services  Service[]
 }
@@ -40,7 +39,6 @@ model Category {
 model Sub_Category {
   id        String    @id @default(uuid())
   name      String    @db.VarChar(50)
-  desc      String    @db.VarChar(500) 
   category  Category  @relation(fields: [catId] , references: [id])  
   catId     String  
   services  Service[]      

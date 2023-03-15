@@ -1,5 +1,5 @@
-import { prisma } from "../config/prisma.js";
-import { verifyToken } from "../utils/jwt";
+import prisma from "../config/prisma.js";
+import { verifyToken } from "../utils/jwt.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -15,7 +15,7 @@ dotenv.config();
  * @returns {object} error
  */
 
-const isAuthenticated = async (req, res, next) => {
+export const isAuthenticated = async (req, res, next) => {
     try {
         // get token from header
         const token = req.header("x-auth-token");
@@ -67,10 +67,10 @@ const isAuthenticated = async (req, res, next) => {
  * @returns {object} error
  */
 
-const isAdmin = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
     try {
         // check if user is admin
-        if (req.user.role !== "admin") {
+        if (req.user.role !== "ADMIN") {
             throw new UnAuthorizededError("Unauthorized!");
         }
 
@@ -80,10 +80,5 @@ const isAdmin = async (req, res, next) => {
         console.log(error);
         next(error);
     }
-};
-
-module.exports = {
-    isAdmin,
-    isAuthenticated,
 };
 
