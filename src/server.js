@@ -7,10 +7,10 @@ import cors from "cors";
 import morgan from "morgan";
 import prisma from "./config/prisma.js";
 import v1Routes from "./routes/v1/auth.routes.js";
+import adminRoutes from "./routes/v1/admin/category.routes.js";
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
-import { isAdmin } from "./middlewares/auth.js";
 
 config();
 
