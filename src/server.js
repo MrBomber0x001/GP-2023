@@ -25,10 +25,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // security: XSS
 // app.use(helmet())
+
 // security: CORS protection
-// app.use(cors({
-//     // origin: env.FRONTEND_URL
-// }))
+app.use(cors());
 
 // Routes
 app.use("/api/v1/auth", v1Routes);
