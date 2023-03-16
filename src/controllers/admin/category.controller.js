@@ -119,16 +119,16 @@ export const createCategory = async (req, res, next) => {
     try {
         // validate name
         if (!req.body.name) {
-            throw new BadRequestError("Invalid name!");
+            throw new BadRequestError("Please fill in the required fields!");
         }
 
         // check if name is empty
         if (req.body.name.trim() === "") {
-            throw new BadRequestError("Name must not be empty!");
+            throw new BadRequestError("Please fill in the required fields!");
         }
 
         // check if category already exists
-        const categoryExists = await prisma.category.findUnique({
+        const categoryExists = await prisma.category.findFirst({
             where: { name: req.body.name },
         });
 
