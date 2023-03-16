@@ -25,7 +25,7 @@ export const signup = async (req, res, next) => {
     try {
         // Check required fields
         if (!firstName || !lastName || !email || !password) {
-            throw new BadRequestError("Please fill in all fields!");
+            throw new BadRequestError("Please fill in required fields!");
         }
 
         // Check email  valid

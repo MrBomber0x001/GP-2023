@@ -1,5 +1,9 @@
 import prisma from "../../config/prisma.js";
-import { BadRequestError, NotFoundError } from "../../error/index.js";
+import {
+    BadRequestError,
+    NotFoundError,
+    httpStatusCodes,
+} from "../../error/index.js";
 
 /**
  * @Author Eslam
@@ -13,11 +17,10 @@ import { BadRequestError, NotFoundError } from "../../error/index.js";
  * @returns {object} next middleware
  */
 
-// get all categories
 export const getAllCategories = async (req, res, next) => {
     try {
         const categories = await prisma.category.findMany();
-        res.status(200).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
             data: categories,
         });
@@ -43,7 +46,7 @@ export const getCategoryById = async (req, res, next) => {
     try {
         // validate id
         if (!req.params.id) {
-            throw new BadRequestError("Invalid id!");
+            throw new BadRequestError("Category id is required!");
         }
 
         const category = await prisma.category.findUnique({
@@ -55,7 +58,7 @@ export const getCategoryById = async (req, res, next) => {
             throw new NotFoundError("Category not found!");
         }
 
-        res.status(200).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
             data: category,
         });
@@ -124,14 +127,13 @@ export const createCategory = async (req, res, next) => {
 
         // check if name is empty
         if (req.body.name.trim() === "") {
-            throw new BadRequestError("Please fill in the required fields!");
+            throw new BadRequestError("Name can't be empty!");
         }
 
         // check if category already exists
         const categoryExists = await prisma.category.findFirst({
             where: { name: req.body.name },
         });
-
         if (categoryExists) {
             throw new BadRequestError("Category already exists!");
         }
@@ -166,25 +168,20 @@ export const createCategory = async (req, res, next) => {
 // update category
 export const updateCategory = async (req, res, next) => {
     try {
-        // validate id
-        if (!req.params.id) {
-            throw new BadRequestError("Invalid id!");
-        }
-        // validate name
-        if (!req.body.name) {
-            throw new BadRequestError("Invalid name!");
+        // Check required fields
+        if (!req.params.id || !req.body.name) {
+            throw new BadRequestError("Please fill in the required fields!");
         }
 
         // check if name is empty
         if (req.body.name.trim() === "") {
-            throw new BadRequestError("Name must not be empty!");
+            throw new BadRequestError("Name can't be empty!");
         }
 
         // check if category not found
         const category = await prisma.category.findUnique({
             where: { id: req.params.id },
         });
-
         if (!category) {
             throw new NotFoundError("Category not found!");
         }
@@ -222,14 +219,13 @@ export const deleteCategory = async (req, res, next) => {
     try {
         // validate id
         if (!req.params.id) {
-            throw new BadRequestError("Invalid id!");
+            throw new BadRequestError("Please fill in the required fields!");
         }
 
         // check if category not found
         const category = await prisma.category.findUnique({
             where: { id: req.params.id },
         });
-
         if (!category) {
             throw new NotFoundError("Category not found!");
         }
@@ -240,9 +236,9 @@ export const deleteCategory = async (req, res, next) => {
 
         res.status(200).json({
             status: "success",
-            data: deletedCategory,
         });
     } catch (error) {
         next(error);
     }
 };
+

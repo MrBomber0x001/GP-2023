@@ -39,7 +39,7 @@ model Category {
 model Sub_Category {
   id        String    @id @default(uuid())
   name      String    @db.VarChar(50)
-  category  Category  @relation(fields: [catId] , references: [id])  
+  category  Category  @relation(fields: [catId] , references: [id] , onDelete: Cascade)  
   catId     String  
   services  Service[]      
 }
@@ -49,11 +49,11 @@ model Service {
   title               String                @db.VarChar(50)
   desc                String                @db.VarChar(500)
   location            String                @db.VarChar(150)
-  user                User                  @relation(fields: [userId] , references: [id])
+  user                User                  @relation(fields: [userId] , references: [id] , onDelete: Cascade)
   userId              String
-  subCat              Sub_Category          @relation(fields: [subCatId] , references: [id])   
+  subCat              Sub_Category          @relation(fields: [subCatId] , references: [id] , onDelete: Cascade)   
   subCatId            String  
-  cat                 Category              @relation(fields: [catId] , references: [id])   
+  cat                 Category              @relation(fields: [catId] , references: [id] , onDelete: Cascade)   
   catId               String 
   ShopServices        ShopService[]
   ContractorServices  ContractorService[]
@@ -62,16 +62,16 @@ model Service {
 
 model ShopService {
   id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id])
+  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
   serviceId String
 }
 model ContractorService {
   id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id])
+  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
   serviceId String
 }
 model LaborService {
   id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id])
+  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
   serviceId String
 }
