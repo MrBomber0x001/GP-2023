@@ -7,12 +7,8 @@ dotenv.config();
  * @Author Eslam
  * @desc Check if user is authenticated
  * @access private
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
+ * @param {object} req, res , next
  * @returns {object} next middleware
- * @returns {object} error
  */
 
 export const isAuthenticated = async (req, res, next) => {
@@ -38,10 +34,7 @@ export const isAuthenticated = async (req, res, next) => {
             where: { id: decoded.id },
         });
         if (!user) {
-            return res.status(401).json({
-                status: "error",
-                message: "Unauthorized",
-            });
+            throw new UnAuthorizededError("Unauthorized!");
         }
 
         // add user to request
@@ -59,12 +52,8 @@ export const isAuthenticated = async (req, res, next) => {
  * @author Eslam
  * @description Check if user is admin
  * @access private
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
+ * @param {object} req, res , next
  * @returns {object} next middleware
- * @returns {object} error
  */
 
 export const isAdmin = async (req, res, next) => {
@@ -81,4 +70,3 @@ export const isAdmin = async (req, res, next) => {
         next(error);
     }
 };
-
