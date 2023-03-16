@@ -122,6 +122,15 @@ export const createCategory = async (req, res, next) => {
             throw new BadRequestError("Invalid name!");
         }
 
+        // check if category already exists
+        const categoryExists = await prisma.category.findUnique({
+            where: { name: req.body.name },
+        });
+
+        if (categoryExists) {
+            throw new BadRequestError("Category already exists!");
+        }
+
         const category = await prisma.category.create({
             data: {
                 name: req.body.name,
