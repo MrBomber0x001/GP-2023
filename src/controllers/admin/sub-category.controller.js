@@ -7,7 +7,7 @@ import { BadRequestError, httpStatusCodes } from "../../error/index.js";
  * @access public
  * @method POST
  * @endpoint `base/admin/subCategory`
- * @returns {object} status, message
+ * @returns {object} status, data
  */
 export const CreateSubCat = async (req, res, next) => {
     try {
@@ -49,7 +49,7 @@ export const CreateSubCat = async (req, res, next) => {
 
         res.status(httpStatusCodes.OK).json({
             status: "success",
-            message: "category created",
+            data: newSubCat,
         });
     } catch (error) {
         next(error);
