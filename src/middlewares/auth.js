@@ -1,6 +1,7 @@
 import prisma from "../config/prisma.js";
 import { verifyToken } from "../utils/jwt.js";
 import dotenv from "dotenv";
+import { UnAuthorizededError } from "../error/index.js";
 dotenv.config();
 
 /**
@@ -71,7 +72,7 @@ export const isAdmin = async (req, res, next) => {
     try {
         // check if user is admin
         if (req.user.role !== "ADMIN") {
-            throw new UnAuthorizededError("Unauthorized!");
+            throw new UnAuthorizededError("Admin Unauthorized!");
         }
 
         // call next middleware

@@ -136,16 +136,17 @@ export const updateSubCat = async (req, res, next) => {
             throw new BadRequestError("subCategory Id is Required!");
         }
 
-        // No updates
-        if (!name) {
-            return res.status(httpStatusCodes.OK).json({
-                status: "success",
-            });
-        }
-
         // Name Can't be empty
         if (name.trim() === "") {
             throw new BadRequestError("Name can't be empty!");
+        }
+
+        // Checking for existing subCategory
+        const SubCat = await prisma.sub_Category.findFirst({
+            where: { name: name },
+        });
+        if (SubCat) {
+            throw new BadRequestError("subCategory name already exist!");
         }
 
         // Get and update subCategoet
