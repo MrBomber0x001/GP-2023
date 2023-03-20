@@ -9,12 +9,8 @@ import {
  * @Author Eslam
  * @desc get all categories
  * @access public
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 export const getAllCategories = async (req, res, next) => {
@@ -33,12 +29,8 @@ export const getAllCategories = async (req, res, next) => {
  * @Author Eslam
  * @desc get category by id
  * @access public
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 // get category by id
@@ -71,12 +63,8 @@ export const getCategoryById = async (req, res, next) => {
  * @Author Eslam
  * @desc get category by name
  * @access public
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 // get category by name
@@ -87,7 +75,7 @@ export const getCategoryByName = async (req, res, next) => {
             throw new BadRequestError("Invalid name!");
         }
 
-        const category = await prisma.category.findUnique({
+        const category = await prisma.category.findFirst({
             where: { name: req.params.name },
         });
 
@@ -96,7 +84,7 @@ export const getCategoryByName = async (req, res, next) => {
             throw new NotFoundError("Category not found!");
         }
 
-        res.status(200).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
             data: category,
         });
@@ -109,12 +97,8 @@ export const getCategoryByName = async (req, res, next) => {
  * @Author Eslam
  * @desc create category
  * @access private
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 // create category
@@ -144,7 +128,7 @@ export const createCategory = async (req, res, next) => {
             },
         });
 
-        res.status(201).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
             data: category,
         });
@@ -157,12 +141,8 @@ export const createCategory = async (req, res, next) => {
  * @Author Eslam
  * @desc update category
  * @access private
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 // update category
@@ -201,7 +181,7 @@ export const updateCategory = async (req, res, next) => {
             },
         });
 
-        res.status(200).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
             data: updatedCategory,
         });
@@ -214,12 +194,8 @@ export const updateCategory = async (req, res, next) => {
  * @Author Eslam
  * @desc delete category
  * @access private
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object} response object
- * @returns {object} error
- * @returns {object} next middleware
+ * @param {object} req, res , next
+ * @returns {object} {status, data}
  */
 
 // delete category
@@ -242,11 +218,11 @@ export const deleteCategory = async (req, res, next) => {
             where: { id: req.params.id },
         });
 
-        res.status(200).json({
+        res.status(httpStatusCodes.OK).json({
             status: "success",
+            data: deletedCategory,
         });
     } catch (error) {
         next(error);
     }
 };
-
