@@ -5,6 +5,7 @@ import {
     httpStatusCodes,
 } from "../../error/index.js";
 
+
 /**
  * @Author Eslam
  * @desc get all categories
@@ -104,6 +105,10 @@ export const getCategoryByName = async (req, res, next) => {
 // create category
 export const createCategory = async (req, res, next) => {
     try {
+
+
+        console.log(req.file);
+
         // validate name
         if (!req.body.name) {
             throw new BadRequestError("Please fill in the required fields!");
@@ -127,6 +132,8 @@ export const createCategory = async (req, res, next) => {
                 name: req.body.name,
             },
         });
+
+        
 
         res.status(httpStatusCodes.OK).json({
             status: "success",
@@ -226,3 +233,4 @@ export const deleteCategory = async (req, res, next) => {
         next(error);
     }
 };
+

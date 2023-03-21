@@ -32,6 +32,7 @@ enum Role {
 model Category {
   id        String          @id @default(uuid())
   name      String          @db.VarChar(50)
+  image     String?         @db.VarChar(150)
   subCats   Sub_Category[]     
   services  Service[]
 }
@@ -39,6 +40,7 @@ model Category {
 model Sub_Category {
   id        String    @id @default(uuid())
   name      String    @db.VarChar(50)
+  image     String?   @db.VarChar(150)
   category  Category  @relation(fields: [catId] , references: [id] , onDelete: Cascade)  
   catId     String  
   services  Service[]      
