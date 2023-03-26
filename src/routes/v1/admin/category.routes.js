@@ -15,7 +15,7 @@ router.route("/categories").get(getAllCategories);
 router.route("/categories/:id").get(getCategoryById);
 router.route("/categories/name/:name").get(getCategoryByName);
 router.route("/categories").post(upload.single("image"), createCategory);
-router.route("/categories/:id").put(updateCategory);
+router.route("/categories/:id").put(upload.single("image"), updateCategory);
 router.route("/categories/:id").delete(deleteCategory);
 
 export default router;

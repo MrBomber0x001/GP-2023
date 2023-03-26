@@ -1,16 +1,27 @@
 import multer from "multer";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
 import { BadRequestError } from "../error/badRequest.js";
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "../public/uploads/images");
+        cb(null, path.join(dirname, "../public/uploads/images"));
     },
 
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + "-" + uniqueSuffix);
+        cb(
+            null,
+            file.fieldname +
+                "-" +
+                uniqueSuffix +
+                path.extname(file.originalname)
+        );
     },
 });
 
