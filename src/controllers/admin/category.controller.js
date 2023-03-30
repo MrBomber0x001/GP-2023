@@ -7,6 +7,11 @@ import {
 } from "../../error/index.js";
 
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 /**
  * @Author Eslam
@@ -130,10 +135,18 @@ export const createCategory = async (req, res, next) => {
         // get image path if exists
         const imagepath = req.file ? req.file.path : null;
 
+        // get relative path
+        const imageRelativePath = path.relative(
+            path.join(dirname, "../.."),
+            imagepath
+        );
+
+        console.log(imageRelativePath);
+
         const category = await prisma.category.create({
             data: {
                 name: req.body.name,
-                image: imagepath,
+                image: imageRelativePath,
             },
         });
 
@@ -195,7 +208,14 @@ export const updateCategory = async (req, res, next) => {
         if (req.file) {
             // get image path
             const newImagePath = req.file.path;
-            updateObj.image = newImagePath;
+
+            // get relative path
+            const imageRelativePath = path.relative(
+                path.join(dirname, "../.."),
+                newImagePath
+            );
+
+            updateObj.image = imageRelativePath;
         }
 
         // get old image path
@@ -207,9 +227,12 @@ export const updateCategory = async (req, res, next) => {
             data: updateObj,
         });
 
-        // delete old image if exists and if new image exists
-        if (oldImagePath && req.file) {
-            fs.unlink(oldImagePath, (err) => {
+        // delete old image if exists and new image is uploaded
+        if (
+            fs.existsSync(path.join(dirname, "../..", oldImagePath)) &&
+            req.file
+        ) {
+            fs.unlink(path.join(dirname, "../..", oldImagePath), (err) => {
                 if (err) {
                     throw new InternalServerError("Error deleting old image!");
                 }
@@ -254,12 +277,10 @@ export const deleteCategory = async (req, res, next) => {
         // get image path
         const imagePath = category.image;
 
-        console.log(imagePath);
-
         // delete image from public folder if exists
 
-        if (imagePath) {
-            fs.unlink(imagePath, (err) => {
+        if (fs.existsSync(path.join(dirname, "../..", imagePath))) {
+            fs.unlink(path.join(dirname, "../..", imagePath), (err) => {
                 if (err) {
                     throw new InternalServerError("Something went wrong!");
                 }
@@ -274,7 +295,6 @@ export const deleteCategory = async (req, res, next) => {
 
         res.status(httpStatusCodes.OK).json({
             status: "success",
-            data: deletedCategory,
         });
     } catch (error) {
         next(error);

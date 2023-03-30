@@ -34,8 +34,8 @@ app.use(cors());
 
 // Routes
 app.use("/api/v1/auth", v1Routes);
-app.use("/api/v1/admin", /*isAuthenticated, isAdmin*/ subCatRoute);
-app.use("/api/v1/admin", /*isAuthenticated, isAdmin,*/ catRoute);
+app.use("/api/v1/admin", subCatRoute);
+app.use("/api/v1/admin", catRoute);
 
 // Not found middleware
 app.use(notFound);
@@ -47,4 +47,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
-
