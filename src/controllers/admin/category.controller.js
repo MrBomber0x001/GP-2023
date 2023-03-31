@@ -87,6 +87,8 @@ export const getCategoryByName = async (req, res, next) => {
             where: { name: req.params.name },
         });
 
+        console.log(category);
+
         // check if category not found
         if (!category) {
             throw new NotFoundError("Category not found!");
@@ -113,6 +115,7 @@ export const getCategoryByName = async (req, res, next) => {
 export const createCategory = async (req, res, next) => {
     try {
         console.log(req.file);
+        console.log(req.body);
 
         // validate name
         if (!req.body.name) {
@@ -133,13 +136,12 @@ export const createCategory = async (req, res, next) => {
         }
 
         // get image path if exists
-        const imagepath = req.file ? req.file.path : null;
+        const imagePath = req.file ? req.file.path : null;
 
-        // get relative path
-        const imageRelativePath = path.relative(
-            path.join(dirname, "../.."),
-            imagepath
-        );
+        // get relative path if image path not null
+        const imageRelativePath = imagePath
+            ? path.relative(path.join(dirname, "../.."), imagePath)
+            : null;
 
         console.log(imageRelativePath);
 
@@ -279,7 +281,10 @@ export const deleteCategory = async (req, res, next) => {
 
         // delete image from public folder if exists
 
-        if (fs.existsSync(path.join(dirname, "../..", imagePath))) {
+        if (
+            imagePath &&
+            fs.existsSync(path.join(dirname, "../..", imagePath))
+        ) {
             fs.unlink(path.join(dirname, "../..", imagePath), (err) => {
                 if (err) {
                     throw new InternalServerError("Something went wrong!");
@@ -288,6 +293,29 @@ export const deleteCategory = async (req, res, next) => {
                 console.log("image deleted successfully");
             });
         }
+
+        // delete images for subcategories
+        const subcategories = await prisma.sub_Category.findMany({
+            where: { catId: req.params.id },
+        });
+
+        subcategories.forEach((subcategory) => {
+            if (
+                subcategory.image &&
+                fs.existsSync(path.join(dirname, "../..", subcategory.image))
+            ) {
+                fs.unlink(
+                    path.join(dirname, "../..", subcategory.image),
+                    (err) => {
+                        if (err) {
+                            throw new InternalServerError(
+                                "Something went wrong!"
+                            );
+                        }
+                    }
+                );
+            }
+        });
 
         const deletedCategory = await prisma.category.delete({
             where: { id: req.params.id },
