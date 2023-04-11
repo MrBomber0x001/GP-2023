@@ -18,12 +18,13 @@ router.route("/categories/:id").get(getCategoryById);
 router.route("/categories/name/:name").get(getCategoryByName);
 router
     .route("/categories")
-    .post(/*isAuthenticated,isAdmin,*/ upload.single("image"), createCategory);
+    .post(isAuthenticated, isAdmin, upload.single("image"), createCategory);
 router
     .route("/categories/:id")
-    .put(/*isAuthenticated,isAdmin,*/ upload.single("image"), updateCategory);
+    .put(isAuthenticated, isAdmin, upload.single("image"), updateCategory);
 router
     .route("/categories/:id")
-    .delete(/*isAuthenticated,isAdmin,*/ deleteCategory);
+    .delete(isAuthenticated, isAdmin, deleteCategory);
 
 export default router;
+

@@ -145,7 +145,7 @@ export const createCategory = async (req, res, next) => {
         const category = await prisma.category.create({
             data: {
                 name: req.body.name,
-                image: imageRelativePath,
+                image: `/${imageRelativePath}`,
             },
         });
 

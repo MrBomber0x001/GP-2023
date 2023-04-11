@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
         cb(
             null,
-            file.fieldname +
+            file.originalname.split(".")[0] +
                 "-" +
                 uniqueSuffix +
                 path.extname(file.originalname)
@@ -53,3 +53,4 @@ function checkFileType(file, cb) {
 }
 
 export default upload;
+

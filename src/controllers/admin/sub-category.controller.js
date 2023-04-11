@@ -63,7 +63,7 @@ export const CreateSubCat = async (req, res, next) => {
             data: {
                 name: name,
                 catId: catId,
-                image: imageRelativePath,
+                image: `/${imageRelativePath}`,
             },
         });
 

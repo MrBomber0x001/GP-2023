@@ -18,16 +18,17 @@ const router = express.Router();
 
 router
     .route("/subCategory")
-    .post(/*isAuthenticated,isAdmin,*/ upload.single("image"), CreateSubCat)
+    .post(isAuthenticated, isAdmin, upload.single("image"), CreateSubCat)
     .get(getAllSubCat);
 router.route("/subCategory/name/:name").get(getSubCatByName);
 router
     .route("/subCategory/cat/:catId")
-    .delete(/*isAuthenticated,isAdmin,*/ deleteAllSubCat);
+    .delete(isAuthenticated, isAdmin, deleteAllSubCat);
 router
     .route("/subCategory/:id")
-    .put(/*isAuthenticated,isAdmin,*/ upload.single("image"), updateSubCat)
-    .delete(/*isAuthenticated,isAdmin,*/ deleteSubCat)
+    .put(isAuthenticated, isAdmin, upload.single("image"), updateSubCat)
+    .delete(isAuthenticated, isAdmin, deleteSubCat)
     .get(getAllSubCatForCat);
 
 export default router;
+
