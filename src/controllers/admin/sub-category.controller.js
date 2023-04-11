@@ -67,9 +67,8 @@ export const CreateSubCat = async (req, res, next) => {
             },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: newSubCat,
+        res.status(httpStatusCodes.CREATED).json({
+            newSubCat,
         });
     } catch (error) {
         next(error);
@@ -89,8 +88,7 @@ export const getAllSubCat = async (req, res, next) => {
         const AllSubCategorys = await prisma.sub_Category.findMany({});
 
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: AllSubCategorys,
+            AllSubCategorys,
         });
     } catch (error) {
         next(error);
@@ -128,8 +126,7 @@ export const getAllSubCatForCat = async (req, res, next) => {
         });
 
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: AllSubCategorys,
+            AllSubCategorys,
         });
     } catch (error) {
         next(error);
@@ -165,8 +162,7 @@ export const getSubCatByName = async (req, res, next) => {
         }
 
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: subCategory,
+            subCategory,
         });
     } catch (error) {
         next(error);
@@ -255,10 +251,7 @@ export const updateSubCat = async (req, res, next) => {
             });
         }
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: updatedSubCat,
-        });
+        res.status(httpStatusCodes.NO_CONTENT).json();
     } catch (error) {
         next(error);
     }
@@ -312,9 +305,7 @@ export const deleteSubCat = async (req, res, next) => {
             where: { id: id },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-        });
+        res.status(httpStatusCodes.NO_CONTENT).json();
     } catch (error) {
         next(error);
     }
@@ -374,10 +365,9 @@ export const deleteAllSubCat = async (req, res, next) => {
             where: { catId: catId },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-        });
+        res.status(httpStatusCodes.NO_CONTENT).json();
     } catch (error) {
         next(error);
     }
 };
+

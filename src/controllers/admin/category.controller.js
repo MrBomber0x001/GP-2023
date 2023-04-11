@@ -25,8 +25,7 @@ export const getAllCategories = async (req, res, next) => {
     try {
         const categories = await prisma.category.findMany();
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: categories,
+            categories,
         });
     } catch (error) {
         next(error);
@@ -59,8 +58,7 @@ export const getCategoryById = async (req, res, next) => {
         }
 
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: category,
+            category,
         });
     } catch (error) {
         next(error);
@@ -95,8 +93,7 @@ export const getCategoryByName = async (req, res, next) => {
         }
 
         res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: category,
+            category,
         });
     } catch (error) {
         next(error);
@@ -152,9 +149,8 @@ export const createCategory = async (req, res, next) => {
             },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: category,
+        res.status(httpStatusCodes.CREATED).json({
+            category,
         });
     } catch (error) {
         next(error);
@@ -241,10 +237,7 @@ export const updateCategory = async (req, res, next) => {
             });
         }
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-            data: updatedCategory,
-        });
+        res.status(httpStatusCodes.NO_CONTENT).json();
     } catch (error) {
         next(error);
     }
@@ -321,10 +314,9 @@ export const deleteCategory = async (req, res, next) => {
             where: { id: req.params.id },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            status: "success",
-        });
+        res.status(httpStatusCodes.NO_CONTENT).json();
     } catch (error) {
         next(error);
     }
 };
+
