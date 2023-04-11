@@ -20,7 +20,7 @@ dotenv.config();
  * @returns {object} user, token
  */
 export const signup = async (req, res, next) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
 
     try {
         // Check required fields
@@ -54,6 +54,7 @@ export const signup = async (req, res, next) => {
                 lastName: lastName,
                 email: email,
                 password: (await bcrypt.hash(password, 10)).toString(),
+                role: role ?? "USER",
             },
         });
 
