@@ -1,13 +1,12 @@
 # Intro
 
-## Techs
+1.
 
--   `Node/Express` API Server
--   Render => Hosting postges db server
--   Postman => API endpoints collection
--   prisma => Postgres ORM
--   Redis => Caching
--   GCS => Google Cloud Storage
+2.
+
+3.
+
+Don't ever mergin into main/master before doing a pull!
 
 ## Project structure
 
@@ -48,15 +47,19 @@ An overview of the GP API.
 
 ## Installation & Build scripts
 
--   build
-
-```sh
-npm run build
-```
-
 ## test scripts
 
 test screenshots
+
+## Contributions
+
+## Resources
+
+## Tools
+
+-   Render => postgres
+-   Mongo Cloud Atlas => mongo
+-   Postman
 
 ## Logs
 
@@ -69,22 +72,4 @@ test screenshots
     -   [ ] Forget password
 -   [ ] Post Feature (Shefo)
     -   [x] CRUD
--   [ ] Topics:
-    -   CORS security
-    -   Rate limiting
-    -   SSL/TLS certificates
-    -   How cachin goes in this situtation!
-    -   Are we read or write intensive ? [choosing the right index]
-    -   choosing the right services [deployment, storage, ci/cd]
-    -   linting and coding style formatting
-    -   contributing guidelines [x]
-    -   dockerfile optimization [synk]
-    -   the right usage of events and webSockets
-    -   redis and webSockets conncetion
-
-## deploy link
-
--   Base URL : https://gp-2023-testing.onrender.com
--   Login => /api/v1/auth/login
--   Signup => /api/v1/auth/signup
 
