@@ -1,6 +1,8 @@
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 // // import helmet from 'helmet';
 // // import passport from 'passport';
 // // import { env, constants } from './src/config/constants'
@@ -17,6 +19,10 @@ config();
 
 const app = express();
 
+const filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(filename);
+const projectDir = path.resolve(__dirname, "..");
+
 /** Server configurations */
 // logger
 
@@ -25,6 +31,7 @@ app.use(morgan("dev"));
 // express middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use("/public", express.static(path.join(projectDir, "src", "public")));
 
 // security: XSS
 // app.use(helmet())
@@ -47,3 +54,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
+
