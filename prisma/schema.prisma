@@ -33,6 +33,8 @@ model Category {
   id        String          @id @default(uuid())
   name      String          @db.VarChar(50)
   image     String?         @db.VarChar(150)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   subCats   Sub_Category[]     
   services  Service[]
 }
@@ -41,6 +43,8 @@ model Sub_Category {
   id        String    @id @default(uuid())
   name      String    @db.VarChar(50)
   image     String?   @db.VarChar(150)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   category  Category  @relation(fields: [catId] , references: [id] , onDelete: Cascade)  
   catId     String  
   services  Service[]      
@@ -51,6 +55,8 @@ model Service {
   title               String                @db.VarChar(50)
   desc                String                @db.VarChar(500)
   location            String                @db.VarChar(150)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   user                User                  @relation(fields: [userId] , references: [id] , onDelete: Cascade)
   userId              String
   subCat              Sub_Category          @relation(fields: [subCatId] , references: [id] , onDelete: Cascade)   
