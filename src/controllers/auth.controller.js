@@ -63,6 +63,7 @@ export const signup = async (req, res, next) => {
         res.status(httpStatusCodes.OK).json({
             message: "User created",
             token: token,
+            role: user.role,
         });
     } catch (error) {
         next(error);
@@ -107,6 +108,7 @@ export const login = async (req, res, next) => {
         return res.status(httpStatusCodes.OK).json({
             message: "Logged in successfully",
             token,
+            role: user.role,
         });
     } catch (error) {
         next(error);

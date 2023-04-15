@@ -24,8 +24,21 @@ const dirname = path.dirname(filename);
 export const getAllCategories = async (req, res, next) => {
     try {
         const categories = await prisma.category.findMany();
+        const subCategories = (await prisma.sub_Category.findMany()) ?? [];
+        const categoriesWithSubCategories = categories.map((category) => ({
+            ...category,
+            subCategories: subCategories
+                .filter((subCategory) => subCategory.catId === category.id)
+                .map((subCategory) => {
+                    return {
+                        id: subCategory.id,
+                        name: subCategory.name,
+                    };
+                }),
+        }));
+        console.log(categoriesWithSubCategories);
         res.status(httpStatusCodes.OK).json({
-            categories,
+            categories: categoriesWithSubCategories,
         });
     } catch (error) {
         next(error);

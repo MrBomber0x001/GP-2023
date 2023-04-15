@@ -14,8 +14,16 @@ dotenv.config();
 
 export const isAuthenticated = async (req, res, next) => {
     try {
-        // get token from header
-        const token = req.header("x-auth-token");
+        // Get auth header value
+        const authHeader = req.headers["authorization"];
+
+        // check if header starts with Bearer
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            throw new UnAuthorizededError("Invalid Credentials!");
+        }
+
+        // get token
+        const token = authHeader.split(" ")[1];
 
         // check if no token
         if (!token) {
