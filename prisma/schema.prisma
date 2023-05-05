@@ -52,34 +52,76 @@ model Sub_Category {
 
 model Service {
   id                  String                @id @default(uuid())
-  title               String                @db.VarChar(50)
+  name                String                @db.VarChar(50)
   desc                String                @db.VarChar(500)
-  location            String                @db.VarChar(150)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   user                User                  @relation(fields: [userId] , references: [id] , onDelete: Cascade)
   userId              String
   subCat              Sub_Category          @relation(fields: [subCatId] , references: [id] , onDelete: Cascade)   
   subCatId            String  
   cat                 Category              @relation(fields: [catId] , references: [id] , onDelete: Cascade)   
   catId               String 
-  ShopServices        ShopService[]
+  StoreServices       StoreService[]
   ContractorServices  ContractorService[]
   LaborServices       LaborService[]
+  PropertyServices    PropertyService[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-model ShopService {
-  id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
-  serviceId String
+model StoreService {
+  id                  String    @id @default(uuid())
+  image               String?   @db.VarChar(150)
+  rating              Float?    @default(0)
+  websitePage         String?   @db.VarChar(150)
+  city                String    @db.VarChar(150)
+  area                String    @db.VarChar(150)
+  street              String?   @db.VarChar(150)
+  locLat              String ?  @db.VarChar(50)
+  locLng              String?   @db.VarChar(50)
+  availableDays       String    @db.VarChar(500)
+  from                Int      @default(0)
+  to                  Int      @default(0)
+  service             Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
+  serviceId           String
 }
+
 model ContractorService {
-  id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
-  serviceId String
+  id                  String    @id @default(uuid())
+  experiance          String   @db.VarChar(150)
+  city                String   @db.VarChar(150)
+  numOfHours          Int      @default(0)
+  from                Int      @default(0)
+  to                  Int      @default(0)
+  rateCost            Int?      @default(0)
+  rateTimeRange       Int?      @default(0)
+  email               String    @db.VarChar(150)
+  phone               String    @db.VarChar(150)
+  service             Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
+  serviceId           String
 }
+
 model LaborService {
-  id        String    @id @default(uuid())
-  service   Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
-  serviceId String
+  id                  String    @id @default(uuid())
+  city                String    @db.VarChar(150)
+  area                String    @db.VarChar(150)
+  cost                Float     @default(0)
+  timeRange           Int       @default(0)
+  availableDays       String    @db.VarChar(500)
+  phone               String    @db.VarChar(150)
+  service             Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
+  serviceId           String
+}
+
+model PropertyService {
+  id                  String    @id @default(uuid())
+  price               Float     @default(0)
+  image               String    @db.VarChar(150)
+  isNegotiable        Boolean   @default(false)
+  sellerCity          String     @db.VarChar(150)
+  sellerArea          String     @db.VarChar(150)
+  sellerStreet        String?   @db.VarChar(150)
+  locLat              String?   @db.VarChar(50)
+  locLng              String?   @db.VarChar(50)
+  service             Service   @relation(fields: [serviceId] , references: [id] , onDelete: Cascade)
+  serviceId           String
 }
