@@ -15,10 +15,8 @@ const dirname = path.dirname(filename);
 
 /**
  * @Author Shefo
- * @desc Create  Service
- * @access public
+ * @desc  Service CRUD
  * @param {object} req, res , next
- * @returns {object} {status, data}
  */
 
 export const createStore = async (req, res, next) => {
@@ -26,7 +24,6 @@ export const createStore = async (req, res, next) => {
         const {
             name,
             desc,
-            rating,
             websitePage,
             city,
             area,
@@ -34,20 +31,26 @@ export const createStore = async (req, res, next) => {
             locLat,
             locLng,
             availableDays,
-            from,
-            to,
             catId,
             subCatId,
             userId,
         } = req.body;
 
+        let { rating, from, to } = req.body;
+
+        rating = parseFloat(rating);
+        from = parseInt(from);
+        to = parseInt(to);
+
         // Validate required fields
         if (
             !name ||
             !desc ||
-            !city ||
-            !area ||
+            !locLat ||
+            !locLng ||
             !availableDays ||
+            !from ||
+            !to ||
             !catId ||
             !subCatId ||
             !userId
@@ -79,7 +82,7 @@ export const createStore = async (req, res, next) => {
         // create storeService
         const storeService = await prisma.storeService.create({
             data: {
-                image: imageRelativePath,
+                image: `/${imageRelativePath}`,
                 rating,
                 websitePage,
                 city,
@@ -148,7 +151,6 @@ export const updateStoreService = async (req, res, next) => {
         const {
             name,
             desc,
-            rating,
             websitePage,
             city,
             area,
@@ -156,20 +158,26 @@ export const updateStoreService = async (req, res, next) => {
             locLat,
             locLng,
             availableDays,
-            from,
-            to,
             catId,
             subCatId,
             userId,
         } = req.body;
 
+        let { rating, from, to } = req.body;
+
+        rating = parseFloat(rating);
+        from = parseInt(from);
+        to = parseInt(to);
+
         // Validate required fields
         if (
             !name ||
             !desc ||
-            !city ||
-            !area ||
+            !locLat ||
+            !locLng ||
             !availableDays ||
+            !from ||
+            !to ||
             !catId ||
             !subCatId ||
             !userId
@@ -177,30 +185,12 @@ export const updateStoreService = async (req, res, next) => {
             throw new BadRequestError("fill in required fields!");
         }
 
-        // get image path if exists
-        const imagePath = req.file ? req.file.path : null;
-
-        // get relative path if image path not null
-        const imageRelativePath = imagePath
-            ? path.relative(path.join(dirname, "../.."), imagePath)
-            : null;
-
-        console.log(imageRelativePath);
-
         // Check if storeService exist
         const storeService = await prisma.storeService.findUnique({
             where: { id },
         });
         if (!storeService) {
             throw new NotFoundError("StoreService does not exist!");
-        }
-
-        // Check if service exist
-        const service = await prisma.service.findUnique({
-            where: { id: storeService.serviceId },
-        });
-        if (!service) {
-            throw new NotFoundError("Service does not exist!");
         }
 
         // Check if category exist
@@ -227,6 +217,24 @@ export const updateStoreService = async (req, res, next) => {
             throw new BadRequestError("User does not exist!");
         }
 
+        // check if image is exists
+        let imageRelativePath = storeService.image;
+        if (req.file) {
+            // delete old image
+            fs.unlinkSync(path.join(dirname, "../..", storeService.image));
+
+            // get image path
+            const newImagePath = req.file.path;
+
+            // get relative path
+            imageRelativePath = path.relative(
+                path.join(dirname, "../.."),
+                newImagePath
+            );
+        }
+
+        console.log(imageRelativePath);
+
         // update service
         const updatedService = await prisma.service.update({
             where: { id: storeService.serviceId },
@@ -243,7 +251,7 @@ export const updateStoreService = async (req, res, next) => {
         const updatedStoreService = await prisma.storeService.update({
             where: { id },
             data: {
-                image: imageRelativePath,
+                image: `/${imageRelativePath}`,
                 rating,
                 websitePage,
                 city,
@@ -258,7 +266,7 @@ export const updateStoreService = async (req, res, next) => {
         });
 
         res.status(httpStatusCodes.OK).json({
-            serviceId: updatedStoreService.id,
+            storeServicee: updatedStoreService,
         });
     } catch (error) {
         next(error);
@@ -269,20 +277,15 @@ export const deleteStoreService = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        // Check if storeService exist
+        // Check if storeService and service exist
         const storeService = await prisma.storeService.findUnique({
             where: { id },
         });
-        if (!storeService) {
-            throw new NotFoundError("StoreService does not exist!");
-        }
-
-        // Check if service exist
         const service = await prisma.service.findUnique({
             where: { id: storeService.serviceId },
         });
-        if (!service) {
-            throw new NotFoundError("Service does not exist!");
+        if (!service || !storeService) {
+            throw new NotFoundError("StoreService does not exist!");
         }
 
         // delete storeService
@@ -295,10 +298,9 @@ export const deleteStoreService = async (req, res, next) => {
             where: { id: storeService.serviceId },
         });
 
-        res.status(httpStatusCodes.OK).json({
-            serviceId: storeService.serviceId,
-        });
+        res.status(httpStatusCodes.OK).json();
     } catch (error) {
         next(error);
     }
 };
+

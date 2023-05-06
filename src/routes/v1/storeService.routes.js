@@ -2,6 +2,9 @@ import express from "express";
 import {
     createStore,
     getAllStoreServices,
+    getStoreServiceById,
+    updateStoreService,
+    deleteStoreService,
 } from "../../controllers/storeService.controller.js";
 import upload from "../../middlewares/uploadImage.js";
 
@@ -14,6 +17,12 @@ router
     .post(isAuthenticated, upload.single("image"), createStore);
 
 router.route("/storeService").get(getAllStoreServices);
+
+router.route("/storeService/:id").get(getStoreServiceById);
+
+router.route("/storeService/:id").put(isAuthenticated, updateStoreService);
+
+router.route("/storeService/:id").delete(isAuthenticated, deleteStoreService);
 
 export default router;
 
