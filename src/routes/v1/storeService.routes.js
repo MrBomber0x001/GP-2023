@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    createStore,
+    createStoreService,
     getAllStoreServices,
     getStoreServiceById,
     updateStoreService,
@@ -14,7 +14,7 @@ const router = express.Router();
 
 router
     .route("/storeService")
-    .post(isAuthenticated, upload.single("image"), createStore);
+    .post(isAuthenticated, upload.single("image"), createStoreService);
 
 router.route("/storeService").get(getAllStoreServices);
 
