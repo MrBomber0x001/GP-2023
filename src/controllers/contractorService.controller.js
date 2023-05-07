@@ -19,7 +19,7 @@ const dirname = path.dirname(filename);
  * @param {object} req, res , next
  */
 
-export const createContractor = async (req, res, next) => {
+export const createContractorService = async (req, res, next) => {
     try {
         const {
             name,
@@ -64,7 +64,6 @@ export const createContractor = async (req, res, next) => {
             throw new BadRequestError("Invalid email!");
         }
 
-
         // Validate rate
         if (rate < 0 || rate > 5) {
             throw new BadRequestError("Invalid rate!");
@@ -79,7 +78,6 @@ export const createContractor = async (req, res, next) => {
         if (availabilityHours < 0 || availabilityHours > 24) {
             throw new BadRequestError("Invalid availabilityHours!");
         }
-
 
         // Validate catId
         const cat = await prisma.category.findUnique({
@@ -192,7 +190,9 @@ export const getContractorServiceById = async (req, res, next) => {
             throw new NotFoundError("ContractorService not found!");
         }
 
-        res.status(httpStatusCodes.OK).json(contractorService);
+        res.status(httpStatusCodes.OK).json({
+            data: contractorService,
+        });
     } catch (error) {
         next(error);
     }
@@ -205,7 +205,7 @@ export const getContractorServiceById = async (req, res, next) => {
  * @param {string} id
  */
 
-export const updateContractorServiceById = async (req, res, next) => {
+export const updateContractorService = async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -228,7 +228,6 @@ export const updateContractorServiceById = async (req, res, next) => {
         experience = parseInt(experience);
         availabilityHours = parseInt(availabilityHours);
 
-        
         // Validate contractorService
         const contractorService = await prisma.contractorService.findUnique({
             where: {
@@ -239,7 +238,6 @@ export const updateContractorServiceById = async (req, res, next) => {
         if (!contractorService) {
             throw new NotFoundError("ContractorService not found!");
         }
-
 
         // Validate required fields
         if (
@@ -265,7 +263,6 @@ export const updateContractorServiceById = async (req, res, next) => {
             throw new BadRequestError("Invalid email!");
         }
 
-
         // Validate experience
         if (experience < 0) {
             throw new BadRequestError("Invalid experience!");
@@ -275,7 +272,6 @@ export const updateContractorServiceById = async (req, res, next) => {
         if (availabilityHours < 0 || availabilityHours > 24) {
             throw new BadRequestError("Invalid availabilityHours!");
         }
-
 
         // Validate catId
         const cat = await prisma.category.findUnique({
@@ -309,7 +305,6 @@ export const updateContractorServiceById = async (req, res, next) => {
         if (!user) {
             throw new BadRequestError("Invalid userId!");
         }
-
 
         // update service
         const service = await prisma.service.update({
@@ -358,10 +353,9 @@ export const updateContractorServiceById = async (req, res, next) => {
  * @param {string} id
  */
 
-export const deleteContractorServiceById = async (req, res, next) => {
+export const deleteContractorService = async (req, res, next) => {
     try {
-
-        const {id} = req.params;
+        const { id } = req.params;
 
         // check if contractorService and service exist
         const contractorService = await prisma.contractorService.findUnique({
@@ -393,7 +387,7 @@ export const deleteContractorServiceById = async (req, res, next) => {
                 id: contractorService.serviceId,
             },
         });
-        
     } catch (error) {
         next(error);
     }
+};

@@ -16,10 +16,13 @@ router
     .post(isAuthenticated, createContractorService);
 
 router.route("/contractorService").get(getAllContractorServices);
+
 router.route("/contractorService/:id").get(getContractorServiceById);
+
 router
     .route("/contractorService/:id")
     .put(isAuthenticated, updateContractorService);
+
 router
     .route("/contractorService/:id")
     .delete(isAuthenticated, deleteContractorService);

@@ -16,6 +16,7 @@ import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
 import { isAdmin, isAuthenticated } from "./middlewares/auth.js";
 import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
+import propertyServiceRoute from "./routes/v1/propertyService.routes.js";
 
 config();
 
@@ -47,6 +48,7 @@ app.use("/api/v1/admin", subCatRoute);
 app.use("/api/v1/admin", catRoute);
 app.use("/api/v1/service", storeServiceRoute);
 app.use("/api/v1/service", contracorServiceRoute);
+app.use("/api/v1/service", propertyServiceRoute);
 
 // Not found middleware
 app.use(notFound);
