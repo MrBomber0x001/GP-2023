@@ -307,6 +307,9 @@ export const deleteStoreService = async (req, res, next) => {
             where: { id: storeService.serviceId },
         });
 
+        // delete store image from server
+        fs.unlinkSync(path.join(dirname, "../..", storeService.image));
+
         res.status(httpStatusCodes.OK).json();
     } catch (error) {
         next(error);
