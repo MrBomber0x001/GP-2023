@@ -15,6 +15,7 @@ import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
 import { isAdmin, isAuthenticated } from "./middlewares/auth.js";
+import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
 
 config();
 
@@ -45,6 +46,7 @@ app.use("/api/v1/auth", v1Routes);
 app.use("/api/v1/admin", subCatRoute);
 app.use("/api/v1/admin", catRoute);
 app.use("/api/v1/service", storeServiceRoute);
+app.use("/api/v1/service", contracorServiceRoute);
 
 // Not found middleware
 app.use(notFound);
@@ -56,4 +58,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
-
