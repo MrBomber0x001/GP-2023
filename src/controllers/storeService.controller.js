@@ -3,7 +3,6 @@ import {
     BadRequestError,
     NotFoundError,
     httpStatusCodes,
-    InternalServerError,
 } from "../error/index.js";
 
 import fs from "fs";
@@ -19,7 +18,7 @@ const dirname = path.dirname(filename);
  * @param {object} req, res , next
  */
 
-export const createStore = async (req, res, next) => {
+export const createStoreService = async (req, res, next) => {
     try {
         const {
             name,
@@ -37,6 +36,9 @@ export const createStore = async (req, res, next) => {
         } = req.body;
 
         let { rating, from, to } = req.body;
+        from = parseInt(from);
+        to = parseInt(to);
+        rating = parseFloat(rating);
 
         rating = parseFloat(rating);
         from = parseInt(from);
@@ -113,6 +115,10 @@ export const getAllStoreServices = async (req, res, next) => {
             },
         });
 
+        if (!storeServices) {
+            throw new NotFoundError("StoreServices not found!");
+        }
+
         res.status(httpStatusCodes.OK).json({
             storeServices,
         });
@@ -164,6 +170,9 @@ export const updateStoreService = async (req, res, next) => {
         } = req.body;
 
         let { rating, from, to } = req.body;
+        from = parseInt(from);
+        to = parseInt(to);
+        rating = parseFloat(rating);
 
         rating = parseFloat(rating);
         from = parseInt(from);
@@ -297,6 +306,9 @@ export const deleteStoreService = async (req, res, next) => {
         await prisma.service.delete({
             where: { id: storeService.serviceId },
         });
+
+        // delete store image from server
+        fs.unlinkSync(path.join(dirname, "../..", storeService.image));
 
         res.status(httpStatusCodes.OK).json();
     } catch (error) {
