@@ -204,14 +204,6 @@ export const updateCategory = async (req, res, next) => {
                 throw new BadRequestError("Name can't be empty!");
             }
 
-            // check if category name already exists
-            const categoryExists = await prisma.category.findFirst({
-                where: { name: req.body.name },
-            });
-            if (categoryExists) {
-                throw new BadRequestError("Category name already exists!");
-            }
-
             updateObj.name = req.body.name;
         }
 
