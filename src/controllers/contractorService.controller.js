@@ -387,6 +387,10 @@ export const deleteContractorService = async (req, res, next) => {
                 id: contractorService.serviceId,
             },
         });
+
+        res.status(httpStatusCodes.OK).json({
+            data: contractorService,
+        });
     } catch (error) {
         next(error);
     }
