@@ -1,30 +1,27 @@
 import express from "express";
+
 import {
-    createContractorService,
-    getAllContractorServices,
-    getContractorServiceById,
-    updateContractorService,
-    deleteContractorService,
-} from "../../controllers/contractorService.controller.js";
+    createPropertyService,
+    getAllPropertyServices,
+    getPropertyServiceById,
+    updatePropertyService,
+    deletePropertyService,
+} from "../../controllers/propertyService.controller.js";
 
 import { isAuthenticated } from "../../middlewares/auth.js";
 
 const router = express.Router();
 
-router
-    .route("/contractorService")
-    .post(isAuthenticated, createContractorService);
+router.route("/ProperyService").post(isAuthenticated, createPropertyService);
 
-router.route("/contractorService").get(getAllContractorServices);
+router.route("/ProperyService").get(getAllPropertyServices);
 
-router.route("/contractorService/:id").get(getContractorServiceById);
+router.route("/ProperyService/:id").get(getPropertyServiceById);
 
-router
-    .route("/contractorService/:id")
-    .put(isAuthenticated, updateContractorService);
+router.route("/ProperyService/:id").put(isAuthenticated, updatePropertyService);
 
 router
-    .route("/contractorService/:id")
-    .delete(isAuthenticated, deleteContractorService);
+    .route("/ProperyService/:id")
+    .delete(isAuthenticated, deletePropertyService);
 
 export default router;
