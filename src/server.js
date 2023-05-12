@@ -10,10 +10,14 @@ import morgan from "morgan";
 import prisma from "./config/prisma.js";
 import v1Routes from "./routes/v1/auth.routes.js";
 import catRoute from "./routes/v1/admin/category.routes.js";
+import storeServiceRoute from "./routes/v1/storeService.routes.js";
+import laborServiceRoute from "./routes/v1/laborService.routes.js";
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
 import { isAdmin, isAuthenticated } from "./middlewares/auth.js";
+import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
+import propertyServiceRoute from "./routes/v1/propertyService.routes.js";
 
 config();
 
@@ -43,6 +47,10 @@ app.use(cors());
 app.use("/api/v1/auth", v1Routes);
 app.use("/api/v1/admin", subCatRoute);
 app.use("/api/v1/admin", catRoute);
+app.use("/api/v1/service", storeServiceRoute);
+app.use("/api/v1/service", laborServiceRoute);
+app.use("/api/v1/service", contracorServiceRoute);
+app.use("/api/v1/service", propertyServiceRoute);
 
 // Not found middleware
 app.use(notFound);
