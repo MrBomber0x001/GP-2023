@@ -169,7 +169,7 @@ export const getPropertyServiceById = async (req, res, next) => {
     }
 };
 
-export const updateContractorService = async (req, res, next) => {
+export const updatePropertyService = async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -304,6 +304,52 @@ export const updateContractorService = async (req, res, next) => {
         res.status(httpStatusCodes.OK).json({
             data: propertyService,
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+    // delete property service
+export const deletePropertyService = async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+
+        const propertyService = await prisma.propertyService.findUnique({
+            where: {
+                id,
+            },
+        });
+
+       const service = await prisma.service.findUnique({
+            where: {
+                id: propertyService.serviceId,
+            },
+        });
+
+        if(!propertyService || !service){
+            throw new NotFoundError(`property service with id ${id} not found!`);
+        }
+
+        // delete property service
+        await prisma.propertyService.delete({
+            where: {
+                id,
+            },
+        });
+
+        // delete service
+        await prisma.service.delete({
+            where: {
+                id: service.id,
+            },
+        });
+
+        res.status(httpStatusCodes.OK).json({
+            data: propertyService,
+        });
+
     } catch (error) {
         next(error);
     }
