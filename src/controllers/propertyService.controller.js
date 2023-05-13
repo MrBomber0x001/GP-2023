@@ -24,15 +24,14 @@ export const createPropertyService = async (req, res, next) => {
             sellerCity,
             sellerArea,
             sellerStreet,
-            LocLat,
-            LocLng,
-            isNegotiable,
+            locLat,
+            locLng,
         } = req.body;
 
-        let { price } = req.body;
+        let { price, isNegotiable } = req.body;
 
         price = parseFloat(price);
-
+        isNegotiable = Boolean(isNegotiable);
         // Validate required fields
         if (
             !name ||
@@ -59,7 +58,7 @@ export const createPropertyService = async (req, res, next) => {
         }
 
         // validate subCatId
-        const subCategory = await prisma.subCategory.findUnique({
+        const subCategory = await prisma.sub_Category.findUnique({
             where: {
                 id: subCatId,
             },
@@ -111,8 +110,8 @@ export const createPropertyService = async (req, res, next) => {
                 sellerCity,
                 sellerArea,
                 sellerStreet,
-                LocLat,
-                LocLng,
+                locLat,
+                locLng,
                 isNegotiable,
                 serviceId: service.id,
             },
@@ -122,6 +121,7 @@ export const createPropertyService = async (req, res, next) => {
             data: propertyService,
         });
     } catch (error) {
+        console.log(error);
         next(error);
     }
 };
@@ -184,13 +184,12 @@ export const updatePropertyService = async (req, res, next) => {
             sellerStreet,
             LocLat,
             LocLng,
-            isNegotiable,
         } = req.body;
 
-        let { price } = req.body;
+        let { price, isNegotiable } = req.body;
 
         price = parseFloat(price);
-
+        isNegotiable = Boolean(isNegotiable);
         // validate property service
         const propertyService = await prisma.propertyService.findUnique({
             where: {
@@ -230,7 +229,7 @@ export const updatePropertyService = async (req, res, next) => {
         }
 
         // validate subCatId
-        const subCategory = await prisma.subCategory.findUnique({
+        const subCategory = await prisma.sub_Category.findUnique({
             where: {
                 id: subCatId,
             },
@@ -309,11 +308,9 @@ export const updatePropertyService = async (req, res, next) => {
     }
 };
 
-
-    // delete property service
+// delete property service
 export const deletePropertyService = async (req, res, next) => {
     try {
-
         const { id } = req.params;
 
         const propertyService = await prisma.propertyService.findUnique({
@@ -322,14 +319,16 @@ export const deletePropertyService = async (req, res, next) => {
             },
         });
 
-       const service = await prisma.service.findUnique({
+        const service = await prisma.service.findUnique({
             where: {
                 id: propertyService.serviceId,
             },
         });
 
-        if(!propertyService || !service){
-            throw new NotFoundError(`property service with id ${id} not found!`);
+        if (!propertyService || !service) {
+            throw new NotFoundError(
+                `property service with id ${id} not found!`
+            );
         }
 
         // delete property service
@@ -349,7 +348,6 @@ export const deletePropertyService = async (req, res, next) => {
         res.status(httpStatusCodes.OK).json({
             data: propertyService,
         });
-
     } catch (error) {
         next(error);
     }
