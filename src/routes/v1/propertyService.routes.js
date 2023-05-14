@@ -9,10 +9,13 @@ import {
 } from "../../controllers/propertyService.controller.js";
 
 import { isAuthenticated } from "../../middlewares/auth.js";
+import upload from "../../middlewares/uploadImage.js";
 
 const router = express.Router();
 
-router.route("/ProperyService").post(isAuthenticated, createPropertyService);
+router
+    .route("/ProperyService")
+    .post(isAuthenticated, upload.single("image"), createPropertyService);
 
 router.route("/ProperyService").get(getAllPropertyServices);
 
