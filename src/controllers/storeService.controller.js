@@ -316,6 +316,7 @@ export const updateStoreService = async (req, res, next) => {
 export const deleteStoreService = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const { token } = req.body;
 
         // Check if storeService and service exist
         const storeService = await prisma.storeService.findUnique({
@@ -326,6 +327,16 @@ export const deleteStoreService = async (req, res, next) => {
         });
         if (!service || !storeService) {
             throw new NotFoundError("StoreService does not exist!");
+        }
+
+        // decode token
+        const decodedToken = verifyToken(token);
+
+        // check if the user is the owner of the storeService
+        if (service.userId !== decodedToken.id) {
+            throw new UnauthorizedError(
+                "You are not authorized to delete this storeService!"
+            );
         }
 
         // delete storeService
