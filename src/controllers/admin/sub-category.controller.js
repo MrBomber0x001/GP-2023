@@ -218,7 +218,7 @@ export const updateSubCat = async (req, res, next) => {
                 imagePath
             );
 
-            updateObj.image = imageRelativePath;
+            updateObj.image = `/${imageRelativePath}`;
         }
 
         // get old image path
