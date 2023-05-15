@@ -1,25 +1,62 @@
 # Intro
 
-## Techs
-
--   `Node/Express` API Server
--   Render => Hosting postges db server
--   Postman => API endpoints collection
--   prisma => Postgres ORM
--   Redis => Caching
--   GCS => Google Cloud Storage
 
 ## Project structure
 
 ```
-📦📦src
+📦src
+ ┣ 📂config
+ ┃ ┣ 📜constants.js
+ ┃ ┣ 📜firebase.js
+ ┃ ┣ 📜logger.js
+ ┃ ┣ 📜prisma.js
+ ┃ ┣ 📜redis.js
+ ┃ ┗ 📜sendGrid.js
  ┣ 📂controllers
- ┃ ┗ 📜index.js
- ┣ 📂helpers
- ┃ ┗ 📜index.js
+ ┃ ┣ 📂admin
+ ┃ ┃ ┣ 📜category.controller.js
+ ┃ ┃ ┗ 📜sub-category.controller.js
+ ┃ ┗ 📜auth.controller.js
+ ┣ 📂error
+ ┃ ┣ 📜badRequest.js
+ ┃ ┣ 📜customeError.js
+ ┃ ┣ 📜httpStatusCode.js
+ ┃ ┣ 📜index.js
+ ┃ ┣ 📜internalServerError.js
+ ┃ ┣ 📜notFound.js
+ ┃ ┗ 📜unAuthorizeded.js
+ ┣ 📂middlewares
+ ┃ ┣ 📜auth.js
+ ┃ ┣ 📜errorHandler.js
+ ┃ ┣ 📜notFoundMiddleware.js
+ ┃ ┗ 📜uploadImage.js
+ ┣ 📂public
+ ┃ ┗ 📂uploads
+ ┃ ┃ ┗ 📂images
+ ┃ ┃ ┃ ┣ 📜image-1680239263190-748085746.jpg
+ ┃ ┃ ┃ ┣ 📜image-1680239293771-11216777.jpg
+ ┃ ┃ ┃ ┣ 📜image-1680239303011-688150651.jpg
+ ┃ ┃ ┃ ┣ 📜image-1681200335142-220006169.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681200589263-800492942.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681200639950-387417493.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681200702184-31193058.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681201147752-299538421.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681201330243-478134238.jpg
+ ┃ ┃ ┃ ┣ 📜shop-1681202267626-76835129.jpg
+ ┃ ┃ ┃ ┗ 📜undefined-1681200416246-991509157.jpg
  ┣ 📂routes
- ┃ ┗ 📜index.js
- ┣ 📜.editorconfig
+ ┃ ┗ 📂v1
+ ┃ ┃ ┣ 📂admin
+ ┃ ┃ ┃ ┣ 📜category.routes.js
+ ┃ ┃ ┃ ┗ 📜sub-Category.routes.js
+ ┃ ┃ ┗ 📜auth.routes.js
+ ┣ 📂scripts
+ ┃ ┗ 📜script.sql
+ ┣ 📂utils
+ ┃ ┣ 📜index.js
+ ┃ ┗ 📜jwt.js
+ ┣ 📂validations
+ ┃ ┗ 📜auth.validation.js
  ┗ 📜server.js
 ```
 
@@ -48,15 +85,19 @@ An overview of the GP API.
 
 ## Installation & Build scripts
 
--   build
-
-```sh
-npm run build
-```
-
 ## test scripts
 
 test screenshots
+
+## Contributions
+
+## Resources
+
+## Tools
+
+-   Render => postgres
+-   Mongo Cloud Atlas => mongo
+-   Postman
 
 ## Logs
 
@@ -69,22 +110,4 @@ test screenshots
     -   [ ] Forget password
 -   [ ] Post Feature (Shefo)
     -   [x] CRUD
--   [ ] Topics:
-    -   CORS security
-    -   Rate limiting
-    -   SSL/TLS certificates
-    -   How cachin goes in this situtation!
-    -   Are we read or write intensive ? [choosing the right index]
-    -   choosing the right services [deployment, storage, ci/cd]
-    -   linting and coding style formatting
-    -   contributing guidelines [x]
-    -   dockerfile optimization [synk]
-    -   the right usage of events and webSockets
-    -   redis and webSockets conncetion
-
-## deploy link
-
--   Base URL : https://gp-2023-testing.onrender.com
--   Login => /api/v1/auth/login
--   Signup => /api/v1/auth/signup
 

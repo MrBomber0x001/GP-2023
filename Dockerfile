@@ -1,12 +1,22 @@
-# avoid using alpine, or lts
-FROM node:alpine3.17
+FROM node:14-alpine
 
-USER node
-WORKDIR /usr/src/app
-COPY --chown=node:node . .
+# Set the working directory to /app
+WORKDIR /app
 
 
+COPY package*.json ./
 
+# Install production dependencies
 RUN npm ci --only=production
 
-CMD ["dumb-init", "node", "server.js"]
+COPY . .
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+
+EXPOSE $PORT
+
+
+CMD ["npm", "start"]

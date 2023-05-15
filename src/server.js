@@ -59,7 +59,7 @@ app.use(notFound);
 app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 3000;
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
 
