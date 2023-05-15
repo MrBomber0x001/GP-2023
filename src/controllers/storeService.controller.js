@@ -4,7 +4,7 @@ import {
     NotFoundError,
     httpStatusCodes,
 } from "../error/index.js";
-
+import { verifyToken } from "../utils/jwt.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -32,17 +32,13 @@ export const createStoreService = async (req, res, next) => {
             availableDays,
             catId,
             subCatId,
-            userId,
+            token,
         } = req.body;
 
         let { rating, from, to } = req.body;
         from = parseInt(from);
         to = parseInt(to);
         rating = parseFloat(rating);
-
-        rating = parseFloat(rating);
-        from = parseInt(from);
-        to = parseInt(to);
 
         // Validate required fields
         if (
@@ -55,9 +51,37 @@ export const createStoreService = async (req, res, next) => {
             !to ||
             !catId ||
             !subCatId ||
-            !userId
+            !token
         ) {
             throw new BadRequestError("fill in required fields!");
+        }
+
+        // decode token
+        const decodedToken = verifyToken(token);
+        console.log(decodedToken);
+
+        // Check if category exist
+        const category = await prisma.category.findUnique({
+            where: { id: catId },
+        });
+        if (!category) {
+            throw new NotFoundError("Category not found!");
+        }
+
+        // Check if subCategory exist
+        const subCategory = await prisma.Sub_Category.findUnique({
+            where: { id: subCatId },
+        });
+        if (!subCategory) {
+            throw new NotFoundError("SubCategory not found!");
+        }
+
+        // Check if user exist
+        const user = await prisma.user.findUnique({
+            where: { id: decodedToken.id },
+        });
+        if (!user) {
+            throw new NotFoundError("User not found!");
         }
 
         // get image path if exists
@@ -77,7 +101,7 @@ export const createStoreService = async (req, res, next) => {
                 desc,
                 catId,
                 subCatId,
-                userId,
+                userId: decodedToken.id,
             },
         });
 
@@ -166,17 +190,13 @@ export const updateStoreService = async (req, res, next) => {
             availableDays,
             catId,
             subCatId,
-            userId,
+            token,
         } = req.body;
 
         let { rating, from, to } = req.body;
         from = parseInt(from);
         to = parseInt(to);
         rating = parseFloat(rating);
-
-        rating = parseFloat(rating);
-        from = parseInt(from);
-        to = parseInt(to);
 
         // Validate required fields
         if (
@@ -189,10 +209,14 @@ export const updateStoreService = async (req, res, next) => {
             !to ||
             !catId ||
             !subCatId ||
-            !userId
+            !token
         ) {
             throw new BadRequestError("fill in required fields!");
         }
+
+        // decode token
+        const decodedToken = verifyToken(token);
+        console.log(decodedToken);
 
         // Check if storeService exist
         const storeService = await prisma.storeService.findUnique({
@@ -200,6 +224,13 @@ export const updateStoreService = async (req, res, next) => {
         });
         if (!storeService) {
             throw new NotFoundError("StoreService does not exist!");
+        }
+
+        // check if the user is the owner of the storeService
+        if (storeService.service.userId !== decodedToken.id) {
+            throw new UnauthorizedError(
+                "You are not authorized to update this storeService!"
+            );
         }
 
         // Check if category exist
