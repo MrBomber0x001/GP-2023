@@ -61,7 +61,7 @@ export const signup = async (req, res, next) => {
         //Done => FIXME: You should sign in a token, with {id, role} and send it on the `res`
         const token = signToken(user.id, user.role);
         res.status(httpStatusCodes.OK).json({
-            message: "User created",
+            user_id: user.id,
             token: token,
             role: user.role,
         });
@@ -106,7 +106,7 @@ export const login = async (req, res, next) => {
 
         // return token
         return res.status(httpStatusCodes.OK).json({
-            message: "Logged in successfully",
+            user_id: user.id,
             token,
             role: user.role,
         });
