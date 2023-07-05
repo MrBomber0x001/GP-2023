@@ -7,6 +7,24 @@ const dirname = path.dirname(filename);
 
 import { BadRequestError } from "../error/badRequest.js";
 
+// check if folder exist, if not create one
+const dir1 = path.join(dirname, "../public");
+if (!fs.existsSync(dir1)) {
+    fs.mkdirSync(dir1);
+}
+
+// check if folder exist, if not create one
+const dir2 = path.join(dirname, "../public/uploads");
+if (!fs.existsSync(dir2)) {
+    fs.mkdirSync(dir2);
+}
+
+// check if folder exist, if not create one
+const dir3 = path.join(dirname, "../public/uploads/images");
+if (!fs.existsSync(dir3)) {
+    fs.mkdirSync(dir3);
+}
+
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
