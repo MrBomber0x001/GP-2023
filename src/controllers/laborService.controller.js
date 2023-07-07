@@ -253,6 +253,7 @@ export const updateLaborService = async (req, res, next) => {
 export const deleteLaborService = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
 
         // Check for id
         if (!id) {
@@ -267,7 +268,14 @@ export const deleteLaborService = async (req, res, next) => {
             where: { id: laborService.serviceId },
         });
         if (!service || !laborService) {
-            throw new NotFoundError("laborService does not exist!");
+            throw new NotFoundError("LaborService does not exist!");
+        }
+
+        // check if the user is the owner of the laborService
+        if (service.userId !== userId) {
+            throw new UnauthorizedError(
+                "You are not authorized to delete this laborService!"
+            );
         }
 
         // delete laborService
