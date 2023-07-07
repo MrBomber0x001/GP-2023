@@ -1,4 +1,3 @@
-import { use } from "passport";
 import prisma from "../config/prisma.js";
 import {
     BadRequestError,
@@ -251,6 +250,14 @@ export const updateStoreService = async (req, res, next) => {
             throw new NotFoundError("StoreService does not exist!");
         }
 
+        // Check if service exist
+        const service = await prisma.service.findUnique({
+            where: { id: storeService.serviceId },
+        });
+        if (!service) {
+            throw new NotFoundError("StoreService does not exist!");
+        }
+
         // Check if category exist
         const cat = await prisma.category.findUnique({
             where: { id: catId },
@@ -276,7 +283,7 @@ export const updateStoreService = async (req, res, next) => {
         }
 
         // check if the user is the owner of the storeService
-        if (storeService.service.userId !== userId) {
+        if (service.userId !== userId) {
             throw new UnauthorizedError(
                 "You are not authorized to update this storeService!"
             );
@@ -292,23 +299,20 @@ export const updateStoreService = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = path.relative(
+            imageRelativePath = `/${path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            );
+            )}`;
         }
 
         console.log(imageRelativePath);
 
         // update service
         const updatedService = await prisma.service.update({
-            where: { id: storeService.serviceId },
+            where: { id: service.id },
             data: {
                 name,
                 desc,
-                catId,
-                subCatId,
-                userId,
             },
         });
 
@@ -316,7 +320,7 @@ export const updateStoreService = async (req, res, next) => {
         const updatedStoreService = await prisma.storeService.update({
             where: { id },
             data: {
-                image: `/${imageRelativePath}`,
+                image: imageRelativePath,
                 rating,
                 websitePage,
                 city,
@@ -347,10 +351,15 @@ export const deleteStoreService = async (req, res, next) => {
         const storeService = await prisma.storeService.findUnique({
             where: { id },
         });
+        if (!storeService) {
+            throw new NotFoundError("StoreService does not exist!");
+        }
+
+        // Check if service exist
         const service = await prisma.service.findUnique({
             where: { id: storeService.serviceId },
         });
-        if (!service || !storeService) {
+        if (!service) {
             throw new NotFoundError("StoreService does not exist!");
         }
 

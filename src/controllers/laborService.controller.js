@@ -3,6 +3,7 @@ import {
     BadRequestError,
     NotFoundError,
     httpStatusCodes,
+    UnAuthorizededError,
 } from "../error/index.js";
 
 export const createLaborService = async (req, res, next) => {
@@ -131,7 +132,6 @@ export const getLaborServiceById = async (req, res, next) => {
 export const updateLaborService = async (req, res, next) => {
     try {
         const { id } = req.params;
-
         const {
             name,
             desc,
@@ -192,6 +192,14 @@ export const updateLaborService = async (req, res, next) => {
             throw new NotFoundError(`No service with id: ${id}`);
         }
 
+        // Check if service exist
+        const service = await prisma.service.findUnique({
+            where: { id: laborService.serviceId },
+        });
+        if (!service) {
+            throw new BadRequestError(`No service with id: ${id}`);
+        }
+
         // Check if category exist
         const cat = await prisma.category.findUnique({
             where: { id: catId },
@@ -216,15 +224,19 @@ export const updateLaborService = async (req, res, next) => {
             throw new BadRequestError("User does not exist!");
         }
 
+        // check if the user is the owner of the laborService
+        if (service.userId !== userId) {
+            throw new UnAuthorizededError(
+                "You are not authorized to delete this laborService!"
+            );
+        }
+
         // update service
-        const service = await prisma.service.update({
+        const updateService = await prisma.service.update({
             where: { id: laborService.serviceId },
             data: {
                 name,
                 desc,
-                catId,
-                subCatId,
-                userId,
             },
         });
 
@@ -238,7 +250,6 @@ export const updateLaborService = async (req, res, next) => {
                 rateRange,
                 availableDays,
                 phone,
-                serviceId: service.id,
             },
         });
 
@@ -273,7 +284,7 @@ export const deleteLaborService = async (req, res, next) => {
 
         // check if the user is the owner of the laborService
         if (service.userId !== userId) {
-            throw new UnauthorizedError(
+            throw new UnAuthorizededError(
                 "You are not authorized to delete this laborService!"
             );
         }
