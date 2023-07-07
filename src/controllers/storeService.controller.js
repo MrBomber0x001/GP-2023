@@ -32,33 +32,45 @@ export const createStoreService = async (req, res, next) => {
             availableDays,
             catId,
             subCatId,
-            token,
+            userId,
         } = req.body;
 
         let { rating, from, to } = req.body;
         from = parseInt(from);
         to = parseInt(to);
-        rating = parseFloat(rating);
+        rating = parseFloat(rating) || 0;
 
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !locLat ||
-            !locLng ||
-            !availableDays ||
-            !from ||
-            !to ||
-            !catId ||
-            !subCatId ||
-            !token
-        ) {
-            throw new BadRequestError("fill in required fields!");
+        if (!name) {
+            throw new BadRequestError("Name is required!");
         }
-
-        // decode token
-        const decodedToken = verifyToken(token);
-        console.log(decodedToken);
+        if (!desc) {
+            throw new BadRequestError("Description is required!");
+        }
+        if (!locLat) {
+            throw new BadRequestError("Location latitude is required!");
+        }
+        if (!locLng) {
+            throw new BadRequestError("Location longitude is required!");
+        }
+        if (!availableDays) {
+            throw new BadRequestError("Available days is required!");
+        }
+        if (!from) {
+            throw new BadRequestError("From is required!");
+        }
+        if (!to) {
+            throw new BadRequestError("To is required!");
+        }
+        if (!catId) {
+            throw new BadRequestError("Category is required!");
+        }
+        if (!subCatId) {
+            throw new BadRequestError("SubCategory is required!");
+        }
+        if (!userId) {
+            throw new BadRequestError("User is required!");
+        }
 
         // Check if category exist
         const category = await prisma.category.findUnique({
@@ -78,7 +90,7 @@ export const createStoreService = async (req, res, next) => {
 
         // Check if user exist
         const user = await prisma.user.findUnique({
-            where: { id: decodedToken.id },
+            where: { id: userId },
         });
         if (!user) {
             throw new NotFoundError("User not found!");
@@ -101,7 +113,7 @@ export const createStoreService = async (req, res, next) => {
                 desc,
                 catId,
                 subCatId,
-                userId: decodedToken.id,
+                userId,
             },
         });
 
@@ -190,33 +202,45 @@ export const updateStoreService = async (req, res, next) => {
             availableDays,
             catId,
             subCatId,
-            token,
+            userId,
         } = req.body;
 
         let { rating, from, to } = req.body;
         from = parseInt(from);
         to = parseInt(to);
-        rating = parseFloat(rating);
+        rating = parseFloat(rating) || 0;
 
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !locLat ||
-            !locLng ||
-            !availableDays ||
-            !from ||
-            !to ||
-            !catId ||
-            !subCatId ||
-            !token
-        ) {
-            throw new BadRequestError("fill in required fields!");
+        if (!name) {
+            throw new BadRequestError("Name is required!");
         }
-
-        // decode token
-        const decodedToken = verifyToken(token);
-        console.log(decodedToken);
+        if (!desc) {
+            throw new BadRequestError("Description is required!");
+        }
+        if (!locLat) {
+            throw new BadRequestError("Location latitude is required!");
+        }
+        if (!locLng) {
+            throw new BadRequestError("Location longitude is required!");
+        }
+        if (!availableDays) {
+            throw new BadRequestError("Available days is required!");
+        }
+        if (!from) {
+            throw new BadRequestError("From is required!");
+        }
+        if (!to) {
+            throw new BadRequestError("To is required!");
+        }
+        if (!catId) {
+            throw new BadRequestError("Category is required!");
+        }
+        if (!subCatId) {
+            throw new BadRequestError("SubCategory is required!");
+        }
+        if (!userId) {
+            throw new BadRequestError("User is required!");
+        }
 
         // Check if storeService exist
         const storeService = await prisma.storeService.findUnique({
@@ -226,11 +250,12 @@ export const updateStoreService = async (req, res, next) => {
             throw new NotFoundError("StoreService does not exist!");
         }
 
-        // check if the user is the owner of the storeService
-        if (storeService.service.userId !== decodedToken.id) {
-            throw new UnauthorizedError(
-                "You are not authorized to update this storeService!"
-            );
+        // Check if service exist
+        const service = await prisma.service.findUnique({
+            where: { id: storeService.serviceId },
+        });
+        if (!service) {
+            throw new NotFoundError("StoreService does not exist!");
         }
 
         // Check if category exist
@@ -246,7 +271,7 @@ export const updateStoreService = async (req, res, next) => {
             where: { id: subCatId },
         });
         if (!subCat) {
-            throw new BadRequestError("Sub-Category does not exist!");
+            throw new BadRequestError("SubCategory does not exist!");
         }
 
         // Check if user exist
@@ -255,6 +280,13 @@ export const updateStoreService = async (req, res, next) => {
         });
         if (!user) {
             throw new BadRequestError("User does not exist!");
+        }
+
+        // check if the user is the owner of the storeService
+        if (service.userId !== userId) {
+            throw new UnauthorizedError(
+                "You are not authorized to update this storeService!"
+            );
         }
 
         // check if image is exists
@@ -267,23 +299,20 @@ export const updateStoreService = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = path.relative(
+            imageRelativePath = `/${path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            );
+            )}`;
         }
 
         console.log(imageRelativePath);
 
         // update service
         const updatedService = await prisma.service.update({
-            where: { id: storeService.serviceId },
+            where: { id: service.id },
             data: {
                 name,
                 desc,
-                catId,
-                subCatId,
-                userId,
             },
         });
 
@@ -291,7 +320,7 @@ export const updateStoreService = async (req, res, next) => {
         const updatedStoreService = await prisma.storeService.update({
             where: { id },
             data: {
-                image: `/${imageRelativePath}`,
+                image: imageRelativePath,
                 rating,
                 websitePage,
                 city,
@@ -316,24 +345,26 @@ export const updateStoreService = async (req, res, next) => {
 export const deleteStoreService = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { token } = req.body;
+        const userId = req.user.id;
 
         // Check if storeService and service exist
         const storeService = await prisma.storeService.findUnique({
             where: { id },
         });
-        const service = await prisma.service.findUnique({
-            where: { id: storeService.serviceId },
-        });
-        if (!service || !storeService) {
+        if (!storeService) {
             throw new NotFoundError("StoreService does not exist!");
         }
 
-        // decode token
-        const decodedToken = verifyToken(token);
+        // Check if service exist
+        const service = await prisma.service.findUnique({
+            where: { id: storeService.serviceId },
+        });
+        if (!service) {
+            throw new NotFoundError("StoreService does not exist!");
+        }
 
         // check if the user is the owner of the storeService
-        if (service.userId !== decodedToken.id) {
+        if (service.userId !== userId) {
             throw new UnauthorizedError(
                 "You are not authorized to delete this storeService!"
             );
