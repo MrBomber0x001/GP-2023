@@ -20,27 +20,41 @@ export const createLaborService = async (req, res, next) => {
             userId,
         } = req.body;
 
-        let { rate } = parseInt(req.body);
-        rate = parseInt(rate);
+        let rate = parseInt(req.body.rate);
 
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !city ||
-            !area ||
-            !rateRange ||
-            !availableDays ||
-            !phone ||
-            !catId ||
-            !subCatId ||
-            !userId
-        ) {
-            throw new BadRequestError("fill in required fields!");
+        if (!name) {
+            throw new BadRequestError("Name is required!");
+        }
+        if (!desc) {
+            throw new BadRequestError("Description is required!");
+        }
+        if (!city) {
+            throw new BadRequestError("City is required!");
+        }
+        if (!area) {
+            throw new BadRequestError("Area is required!");
+        }
+        if (!rateRange) {
+            throw new BadRequestError("Rate Range is required!");
+        }
+        if (!availableDays) {
+            throw new BadRequestError("Available Days is required!");
+        }
+        if (!phone) {
+            throw new BadRequestError("Phone is required!");
+        }
+        if (!catId) {
+            throw new BadRequestError("Category is required!");
+        }
+        if (!subCatId) {
+            throw new BadRequestError("Sub-Category is required!");
+        }
+        if (!userId) {
+            throw new BadRequestError("User is required!");
         }
 
-        //create service
-
+        //Create service
         const service = await prisma.service.create({
             data: {
                 name,
@@ -90,6 +104,11 @@ export const getLaborServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
 
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("Id is required!");
+        }
+
         const laborService = await prisma.laborService.findUnique({
             where: {
                 id,
@@ -100,7 +119,7 @@ export const getLaborServiceById = async (req, res, next) => {
         });
 
         if (!laborService) {
-            throw new NotFoundError(`No service with id ${id}`);
+            throw new NotFoundError(`No service with id: ${id}`);
         }
 
         res.status(httpStatusCodes.OK).json(laborService);
@@ -126,23 +145,43 @@ export const updateLaborService = async (req, res, next) => {
             userId,
         } = req.body;
 
-        let { rate } = req.body;
-        rate = parseInt(rate);
+        let rate = parseInt(req.body.rate);
 
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !city ||
-            !area ||
-            !rateRange ||
-            !availableDays ||
-            !phone ||
-            !catId ||
-            !subCatId ||
-            !userId
-        ) {
-            throw new BadRequestError("fill in required fields!");
+        if (!name) {
+            throw new BadRequestError("Name is required!");
+        }
+        if (!desc) {
+            throw new BadRequestError("Description is required!");
+        }
+        if (!city) {
+            throw new BadRequestError("City is required!");
+        }
+        if (!area) {
+            throw new BadRequestError("Area is required!");
+        }
+        if (!rateRange) {
+            throw new BadRequestError("Rate Range is required!");
+        }
+        if (!availableDays) {
+            throw new BadRequestError("Available Days is required!");
+        }
+        if (!phone) {
+            throw new BadRequestError("Phone is required!");
+        }
+        if (!catId) {
+            throw new BadRequestError("Category is required!");
+        }
+        if (!subCatId) {
+            throw new BadRequestError("Sub-Category is required!");
+        }
+        if (!userId) {
+            throw new BadRequestError("User is required!");
+        }
+
+        // Check for id
+        if (!id) {
+            throw new BadRequestError("Id is required!");
         }
 
         // Check if laborService exist
@@ -150,7 +189,7 @@ export const updateLaborService = async (req, res, next) => {
             where: { id },
         });
         if (!laborService) {
-            throw new NotFoundError("laborService does not exist!");
+            throw new NotFoundError(`No service with id: ${id}`);
         }
 
         // Check if category exist
@@ -214,6 +253,11 @@ export const updateLaborService = async (req, res, next) => {
 export const deleteLaborService = async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        // Check for id
+        if (!id) {
+            throw new BadRequestError("Id is required!");
+        }
 
         // Check if laborService and service exist
         const laborService = await prisma.laborService.findUnique({
