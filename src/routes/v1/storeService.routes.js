@@ -5,6 +5,7 @@ import {
     getStoreServiceById,
     updateStoreService,
     deleteStoreService,
+    getStoreServicesByUserId,
 } from "../../controllers/storeService.controller.js";
 import upload from "../../middlewares/uploadImage.js";
 
@@ -19,6 +20,10 @@ router
 router.route("/storeService").get(getAllStoreServices);
 
 router.route("/storeService/:id").get(getStoreServiceById);
+
+router
+    .route("/storeService/user/:id")
+    .get(isAuthenticated, getStoreServicesByUserId);
 
 router.route("/storeService/:id").put(isAuthenticated, updateStoreService);
 
