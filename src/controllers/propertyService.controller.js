@@ -195,6 +195,40 @@ export const getPropertyServiceById = async (req, res, next) => {
     }
 };
 
+
+export const getPropertyServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with property service
+        const propertyService = await prisma.propertyService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!propertyService) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(propertyService);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const updatePropertyService = async (req, res, next) => {
     try {
         const { id } = req.params;

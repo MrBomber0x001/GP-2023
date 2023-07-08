@@ -238,6 +238,39 @@ export const getContractorServiceById = async (req, res, next) => {
     }
 };
 
+export const getContractorServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with contractor service
+        const contractorService = await prisma.contractorService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!contractorService) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(contractorService);
+    } catch (error) {
+        next(error);
+    }
+};
+
 /**
  * @Author Eslam
  * @desc  update contractorService by id
@@ -427,7 +460,7 @@ export const updateContractorService = async (req, res, next) => {
         });
 
         res.status(httpStatusCodes.OK).json({
-            id : updatedContractorService.id,
+            id: updatedContractorService.id,
         });
     } catch (error) {
         next(error);

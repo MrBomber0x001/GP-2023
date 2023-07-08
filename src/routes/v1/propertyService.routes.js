@@ -6,6 +6,7 @@ import {
     getPropertyServiceById,
     updatePropertyService,
     deletePropertyService,
+    getPropertyServicesByUserId,
 } from "../../controllers/propertyService.controller.js";
 
 import { isAuthenticated } from "../../middlewares/auth.js";
@@ -20,6 +21,8 @@ router
 router.route("/ProperyService").get(getAllPropertyServices);
 
 router.route("/ProperyService/:id").get(getPropertyServiceById);
+
+router.route("/ProperyService/user/:id").get(isAuthenticated,getPropertyServicesByUserId);
 
 router.route("/ProperyService/:id").put(isAuthenticated, updatePropertyService);
 
