@@ -5,6 +5,7 @@ import {
     getLaborServiceById,
     updateLaborService,
     deleteLaborService,
+    getLaborServicesByUserId,
 } from "../../controllers/laborService.controller.js";
 
 import { isAuthenticated } from "../../middlewares/auth.js";
@@ -14,6 +15,10 @@ const router = express.Router();
 router.route("/laborService").post(isAuthenticated, createLaborService);
 
 router.route("/laborService").get(getAllLaborServices);
+
+router
+    .route("/laborService/user/:id")
+    .get(isAuthenticated, getLaborServicesByUserId);
 
 router.route("/laborService/:id").get(getLaborServiceById);
 
