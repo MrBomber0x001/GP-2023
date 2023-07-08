@@ -89,11 +89,30 @@ export const createLaborService = async (req, res, next) => {
 
 export const getAllLaborServices = async (req, res, next) => {
     try {
-        const laborServices = await prisma.laborService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
+
+        let laborServices = [];
+
+        if (city) {
+            laborServices = await prisma.laborService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            laborServices = await prisma.laborService.findMany({
+                include: {
+                    service: true,
+                },
+            });
+        }
+
+        if (!laborServices) {
+            throw new NotFoundError("No services found!");
+        }
 
         res.status(httpStatusCodes.OK).json(laborServices);
     } catch (error) {

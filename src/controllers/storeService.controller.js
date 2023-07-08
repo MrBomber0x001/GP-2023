@@ -145,16 +145,30 @@ export const createStoreService = async (req, res, next) => {
 
 export const getAllStoreServices = async (req, res, next) => {
     try {
-        const storeServices = await prisma.storeService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
 
-        if (!storeServices) {
-            throw new NotFoundError("StoreServices not found!");
+        let storeServices = [];
+
+        if (city) {
+            storeServices = await prisma.storeService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            storeServices = await prisma.storeService.findMany({
+                include: {
+                    service: true,
+                },
+            });
         }
 
+        if (!storeServices) {
+            throw new NotFoundError("No services found!");
+        }
         res.status(httpStatusCodes.OK).json({
             storeServices,
         });
