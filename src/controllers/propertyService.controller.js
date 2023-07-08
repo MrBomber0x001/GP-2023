@@ -150,15 +150,32 @@ export const createPropertyService = async (req, res, next) => {
 
 export const getAllPropertyServices = async (req, res, next) => {
     try {
-        const propertyServices = await prisma.propertyService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
 
-        res.status(httpStatusCodes.OK).json({
-            data: propertyServices,
-        });
+        let propertyServices = [];
+
+        if (city) {
+            propertyServices = await prisma.propertyService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            propertyServices = await prisma.propertyService.findMany({
+                include: {
+                    service: true,
+                },
+            });
+        }
+
+        if (!propertyServices) {
+            throw new NotFoundError("No services found!");
+        }
+
+        res.status(httpStatusCodes.OK).json(propertyServices);
     } catch (error) {
         next(error);
     }
@@ -194,7 +211,6 @@ export const getPropertyServiceById = async (req, res, next) => {
         next(error);
     }
 };
-
 
 export const getPropertyServicesByUserId = async (req, res, next) => {
     try {

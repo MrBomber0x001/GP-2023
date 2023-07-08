@@ -190,11 +190,30 @@ export const createContractorService = async (req, res, next) => {
 
 export const getAllContractorServices = async (req, res, next) => {
     try {
-        const contractorServices = await prisma.contractorService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
+
+        let contractorServices = [];
+
+        if (city) {
+            contractorServices = await prisma.contractorService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            contractorServices = await prisma.contractorService.findMany({
+                include: {
+                    service: true,
+                },
+            });
+        }
+
+        if (!contractorServices) {
+            throw new NotFoundError("No services found!");
+        }
 
         res.status(httpStatusCodes.OK).json(contractorServices);
     } catch (error) {
