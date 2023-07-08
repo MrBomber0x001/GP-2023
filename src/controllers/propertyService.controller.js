@@ -308,10 +308,10 @@ export const updatePropertyService = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = path.relative(
+            imageRelativePath = `/${path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            );
+            )}`;
         }
 
         console.log(imageRelativePath);
@@ -351,7 +351,7 @@ export const updatePropertyService = async (req, res, next) => {
                 id,
             },
             data: {
-                image: `/${imageRelativePath}`,
+                image: imageRelativePath,
                 price,
                 sellerCity,
                 sellerArea,
