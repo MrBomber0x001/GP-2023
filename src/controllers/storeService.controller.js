@@ -186,6 +186,39 @@ export const getStoreServiceById = async (req, res, next) => {
     }
 };
 
+export const getStoreServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with store service
+        const storeServices = await prisma.storeService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!storeServices) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(storeServices);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const updateStoreService = async (req, res, next) => {
     try {
         const { id } = req.params;

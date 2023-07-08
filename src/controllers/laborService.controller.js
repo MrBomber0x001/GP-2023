@@ -129,6 +129,39 @@ export const getLaborServiceById = async (req, res, next) => {
     }
 };
 
+export const getLaborServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with labor service
+        const laborServices = await prisma.laborService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!laborServices) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(laborServices);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const updateLaborService = async (req, res, next) => {
     try {
         const { id } = req.params;
