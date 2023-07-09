@@ -63,16 +63,6 @@ export const deleteUserById = async (req, res, next) => {
             throw new NotFoundError(`user with id ${id} not found`);
         }
 
-        // before deleting user, delete all the services of the user
-        const services = await prisma.service.findMany({
-            where: {
-                userId: id,
-            },
-        });
-
-        if (services.length > 0) {
-        }
-
         const deletedUser = await prisma.user.delete({
             where: {
                 id: id,
