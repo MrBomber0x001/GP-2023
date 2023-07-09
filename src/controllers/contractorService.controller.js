@@ -4,6 +4,7 @@ import {
     NotFoundError,
     httpStatusCodes,
     InternalServerError,
+    UnAuthorizededError,
 } from "../error/index.js";
 
 import fs from "fs";
@@ -36,6 +37,55 @@ export const createContractorService = async (req, res, next) => {
             experience,
             availabilityHours,
         } = req.body;
+
+        // validate required fields
+        if (!name) {
+            throw new BadRequestError("name is required!");
+        }
+
+        if (!desc) {
+            throw new BadRequestError("desc is required!");
+        }
+
+        if (!experience) {
+            throw new BadRequestError("experience is required!");
+        }
+
+        if (!availabilityHours) {
+            throw new BadRequestError("availabilityHours is required!");
+        }
+
+        if (!availabilityRange) {
+            throw new BadRequestError("availabilityRange is required!");
+        }
+
+        if (!rateRange) {
+            throw new BadRequestError("rateRange is required!");
+        }
+
+        if (!email) {
+            throw new BadRequestError("email is required!");
+        }
+
+        if (!phone) {
+            throw new BadRequestError("phone is required!");
+        }
+
+        if (!userId) {
+            throw new BadRequestError("userId is required!");
+        }
+
+        if (!catId) {
+            throw new BadRequestError("catId is required!");
+        }
+
+        if (!subCatId) {
+            throw new BadRequestError("subCatId is required!");
+        }
+
+        if (!rate) {
+            throw new BadRequestError("rate is required!");
+        }
 
         // Validate email
         const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
@@ -140,11 +190,30 @@ export const createContractorService = async (req, res, next) => {
 
 export const getAllContractorServices = async (req, res, next) => {
     try {
-        const contractorServices = await prisma.contractorService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
+
+        let contractorServices = [];
+
+        if (city) {
+            contractorServices = await prisma.contractorService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            contractorServices = await prisma.contractorService.findMany({
+                include: {
+                    service: true,
+                },
+            });
+        }
+
+        if (!contractorServices) {
+            throw new NotFoundError("No services found!");
+        }
 
         res.status(httpStatusCodes.OK).json(contractorServices);
     } catch (error) {
@@ -162,6 +231,10 @@ export const getAllContractorServices = async (req, res, next) => {
 export const getContractorServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        if (!id) {
+            throw new BadRequestError("id is required!");
+        }
 
         const contractorService = await prisma.contractorService.findUnique({
             where: {
@@ -184,6 +257,39 @@ export const getContractorServiceById = async (req, res, next) => {
     }
 };
 
+export const getContractorServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with contractor service
+        const contractorService = await prisma.contractorService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!contractorService) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(contractorService);
+    } catch (error) {
+        next(error);
+    }
+};
+
 /**
  * @Author Eslam
  * @desc  update contractorService by id
@@ -194,6 +300,10 @@ export const getContractorServiceById = async (req, res, next) => {
 export const updateContractorService = async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        if (!id) {
+            throw new BadRequestError("id is required!");
+        }
 
         const {
             name,
@@ -220,6 +330,55 @@ export const updateContractorService = async (req, res, next) => {
 
         if (!contractorService) {
             throw new NotFoundError("ContractorService not found!");
+        }
+
+        // validate required fields
+        if (!name) {
+            throw new BadRequestError("name is required!");
+        }
+
+        if (!desc) {
+            throw new BadRequestError("desc is required!");
+        }
+
+        if (!experience) {
+            throw new BadRequestError("experience is required!");
+        }
+
+        if (!availabilityHours) {
+            throw new BadRequestError("availabilityHours is required!");
+        }
+
+        if (!availabilityRange) {
+            throw new BadRequestError("availabilityRange is required!");
+        }
+
+        if (!rateRange) {
+            throw new BadRequestError("rateRange is required!");
+        }
+
+        if (!email) {
+            throw new BadRequestError("email is required!");
+        }
+
+        if (!phone) {
+            throw new BadRequestError("phone is required!");
+        }
+
+        if (!userId) {
+            throw new BadRequestError("userId is required!");
+        }
+
+        if (!catId) {
+            throw new BadRequestError("catId is required!");
+        }
+
+        if (!subCatId) {
+            throw new BadRequestError("subCatId is required!");
+        }
+
+        if (!rate) {
+            throw new BadRequestError("rate is required!");
         }
 
         // Validate email
@@ -271,6 +430,22 @@ export const updateContractorService = async (req, res, next) => {
             throw new BadRequestError("Invalid userId!");
         }
 
+        // check if service exists
+        const serviceExists = await prisma.service.findUnique({
+            where: {
+                id: contractorService.serviceId,
+            },
+        });
+
+        if (!serviceExists) {
+            throw new NotFoundError("Service not found!");
+        }
+
+        // check if user owns the service
+        if (serviceExists.userId !== userId) {
+            throw new UnAuthorizededError("You don't own this service!");
+        }
+
         // update service
         const service = await prisma.service.update({
             where: {
@@ -304,7 +479,7 @@ export const updateContractorService = async (req, res, next) => {
         });
 
         res.status(httpStatusCodes.OK).json({
-            data: updatedContractorService,
+            id: updatedContractorService.id,
         });
     } catch (error) {
         next(error);
@@ -322,6 +497,12 @@ export const deleteContractorService = async (req, res, next) => {
     try {
         const { id } = req.params;
 
+        const userId = req.user.id;
+
+        if (!id) {
+            throw new BadRequestError("id is required!");
+        }
+
         // check if contractorService and service exist
         const contractorService = await prisma.contractorService.findUnique({
             where: {
@@ -337,6 +518,11 @@ export const deleteContractorService = async (req, res, next) => {
 
         if (!contractorService || !service) {
             throw new NotFoundError("ContractorService not found!");
+        }
+
+        // check if user is authorized
+        if (service.userId !== userId) {
+            throw new UnauthorizedError("You are not authorized!");
         }
 
         // delete contractorService

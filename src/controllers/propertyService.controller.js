@@ -4,6 +4,7 @@ import {
     NotFoundError,
     httpStatusCodes,
     InternalServerError,
+    UnAuthorizededError,
 } from "../error/index.js";
 
 import fs from "fs";
@@ -32,18 +33,39 @@ export const createPropertyService = async (req, res, next) => {
 
         price = parseFloat(price);
         isNegotiable = Boolean(isNegotiable);
+
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !catId ||
-            !subCatId ||
-            !userId ||
-            !sellerCity ||
-            !sellerArea ||
-            !price
-        ) {
-            throw new BadRequestError("fill in required fields!");
+
+        if (!name) {
+            throw new BadRequestError("name is required!");
+        }
+
+        if (!desc) {
+            throw new BadRequestError("desc is required!");
+        }
+
+        if (!catId) {
+            throw new BadRequestError("catId is required!");
+        }
+
+        if (!subCatId) {
+            throw new BadRequestError("subCatId is required!");
+        }
+
+        if (!userId) {
+            throw new BadRequestError("userId is required!");
+        }
+
+        if (!sellerCity) {
+            throw new BadRequestError("sellerCity is required!");
+        }
+
+        if (!sellerArea) {
+            throw new BadRequestError("sellerArea is required!");
+        }
+
+        if (!price) {
+            throw new BadRequestError("price is required!");
         }
 
         // validate catId
@@ -128,15 +150,32 @@ export const createPropertyService = async (req, res, next) => {
 
 export const getAllPropertyServices = async (req, res, next) => {
     try {
-        const propertyServices = await prisma.propertyService.findMany({
-            include: {
-                service: true,
-            },
-        });
+        const { city } = req.query;
 
-        res.status(httpStatusCodes.OK).json({
-            data: propertyServices,
-        });
+        let propertyServices = [];
+
+        if (city) {
+            propertyServices = await prisma.propertyService.findMany({
+                where: {
+                    city: city,
+                },
+                include: {
+                    service: true,
+                },
+            });
+        } else {
+            propertyServices = await prisma.propertyService.findMany({
+                include: {
+                    service: true,
+                },
+            });
+        }
+
+        if (!propertyServices) {
+            throw new NotFoundError("No services found!");
+        }
+
+        res.status(httpStatusCodes.OK).json(propertyServices);
     } catch (error) {
         next(error);
     }
@@ -145,6 +184,10 @@ export const getAllPropertyServices = async (req, res, next) => {
 export const getPropertyServiceById = async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        if (!id) {
+            throw new BadRequestError("id is required!");
+        }
 
         const propertyService = await prisma.propertyService.findUnique({
             where: {
@@ -157,13 +200,46 @@ export const getPropertyServiceById = async (req, res, next) => {
 
         if (!propertyService) {
             throw new NotFoundError(
-                `property service with id ${id} not found!`
+                `property service with id: ${id} not found!`
             );
         }
 
         res.status(httpStatusCodes.OK).json({
             data: propertyService,
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getPropertyServicesByUserId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Validate id
+        if (!id) {
+            throw new BadRequestError("User Id is required!");
+        }
+
+        // get services by user id and join with property service
+        const propertyService = await prisma.propertyService.findMany({
+            where: {
+                service: {
+                    user: {
+                        id: id,
+                    },
+                },
+            },
+            include: {
+                service: true,
+            },
+        });
+
+        if (!propertyService) {
+            throw new NotFoundError(`No service with for user id: ${id}`);
+        }
+
+        res.status(httpStatusCodes.OK).json(propertyService);
     } catch (error) {
         next(error);
     }
@@ -204,17 +280,37 @@ export const updatePropertyService = async (req, res, next) => {
         }
 
         // Validate required fields
-        if (
-            !name ||
-            !desc ||
-            !catId ||
-            !subCatId ||
-            !userId ||
-            !sellerCity ||
-            !sellerArea ||
-            !price
-        ) {
-            throw new BadRequestError("fill in required fields!");
+
+        if (!name) {
+            throw new BadRequestError("name is required!");
+        }
+
+        if (!desc) {
+            throw new BadRequestError("desc is required!");
+        }
+
+        if (!catId) {
+            throw new BadRequestError("catId is required!");
+        }
+
+        if (!subCatId) {
+            throw new BadRequestError("subCatId is required!");
+        }
+
+        if (!userId) {
+            throw new BadRequestError("userId is required!");
+        }
+
+        if (!sellerCity) {
+            throw new BadRequestError("sellerCity is required!");
+        }
+
+        if (!sellerArea) {
+            throw new BadRequestError("sellerArea is required!");
+        }
+
+        if (!price) {
+            throw new BadRequestError("price is required!");
         }
 
         // validate catId
@@ -262,23 +358,40 @@ export const updatePropertyService = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = path.relative(
+            imageRelativePath = `/${path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            );
+            )}`;
         }
 
         console.log(imageRelativePath);
 
+        // check if user is the owner of the service
+
+        const service = await prisma.service.findUnique({
+            where: {
+                id: propertyService.serviceId,
+            },
+        });
+
+        if (!service) {
+            throw new NotFoundError(
+                `service with id ${propertyService.serviceId} not found!`
+            );
+        }
+
+        if (service.userId !== userId) {
+            throw new UnAuthorizededError(
+                `user with id ${userId} is not the owner of the service!`
+            );
+        }
+
         // update service
-        const service = await prisma.service.update({
+        const Updatedservice = await prisma.service.update({
             where: { id: propertyService.serviceId },
             data: {
                 name,
                 desc,
-                catId,
-                subCatId,
-                userId,
             },
         });
 
@@ -288,7 +401,7 @@ export const updatePropertyService = async (req, res, next) => {
                 id,
             },
             data: {
-                image: `/${imageRelativePath}`,
+                image: imageRelativePath,
                 price,
                 sellerCity,
                 sellerArea,
@@ -296,12 +409,11 @@ export const updatePropertyService = async (req, res, next) => {
                 LocLat,
                 LocLng,
                 isNegotiable,
-                serviceId: service.id,
             },
         });
 
         res.status(httpStatusCodes.OK).json({
-            data: propertyService,
+            serviceId: updatedPropertyService.id,
         });
     } catch (error) {
         next(error);
@@ -312,6 +424,11 @@ export const updatePropertyService = async (req, res, next) => {
 export const deletePropertyService = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
+        if (!id) {
+            throw new BadRequestError("id is required!");
+        }
 
         const propertyService = await prisma.propertyService.findUnique({
             where: {
@@ -328,6 +445,14 @@ export const deletePropertyService = async (req, res, next) => {
         if (!propertyService || !service) {
             throw new NotFoundError(
                 `property service with id ${id} not found!`
+            );
+        }
+
+        // check if user is the owner of the service
+
+        if (service.userId !== userId) {
+            throw new UnAuthorizededError(
+                `user with id ${userId} is not the owner of the service!`
             );
         }
 

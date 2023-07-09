@@ -5,6 +5,7 @@ import {
     getContractorServiceById,
     updateContractorService,
     deleteContractorService,
+    getContractorServicesByUserId,
 } from "../../controllers/contractorService.controller.js";
 
 import { isAuthenticated } from "../../middlewares/auth.js";
@@ -17,6 +18,9 @@ router
 
 router.route("/contractorService").get(getAllContractorServices);
 router.route("/contractorService/:id").get(getContractorServiceById);
+router
+    .route("/contractorService/user/:id")
+    .get(isAuthenticated, getContractorServicesByUserId);
 router
     .route("/contractorService/:id")
     .put(isAuthenticated, updateContractorService);
