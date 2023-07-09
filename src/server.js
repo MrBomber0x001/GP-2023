@@ -3,21 +3,25 @@ import { config } from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import morgan from "morgan";
+
 // // import helmet from 'helmet';
 // // import passport from 'passport';
 // // import { env, constants } from './src/config/constants'
-import morgan from "morgan";
-import prisma from "./config/prisma.js";
+
 import v1Routes from "./routes/v1/auth.routes.js";
+import userManamentRoute from "./routes/v1/admin/userManagement.routes.js";
+
 import catRoute from "./routes/v1/admin/category.routes.js";
+import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
+
 import storeServiceRoute from "./routes/v1/storeService.routes.js";
 import laborServiceRoute from "./routes/v1/laborService.routes.js";
-import notFound from "./middlewares/notFoundMiddleware.js";
-import errorHandlerMiddleware from "./middlewares/errorHandler.js";
-import subCatRoute from "./routes/v1/admin/sub-Category.routes.js";
-import { isAdmin, isAuthenticated } from "./middlewares/auth.js";
 import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
 import propertyServiceRoute from "./routes/v1/propertyService.routes.js";
+
+import notFound from "./middlewares/notFoundMiddleware.js";
+import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 
 config();
 
@@ -47,6 +51,7 @@ app.use(cors());
 app.use("/api/v1/auth", v1Routes);
 app.use("/api/v1/admin", subCatRoute);
 app.use("/api/v1/admin", catRoute);
+app.use("/api/v1/admin", userManamentRoute);
 app.use("/api/v1/service", storeServiceRoute);
 app.use("/api/v1/service", laborServiceRoute);
 app.use("/api/v1/service", contracorServiceRoute);
