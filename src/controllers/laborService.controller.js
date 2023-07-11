@@ -114,7 +114,22 @@ export const getAllLaborServices = async (req, res, next) => {
             throw new NotFoundError("No services found!");
         }
 
-        res.status(httpStatusCodes.OK).json(laborServices);
+        // get all subCategories
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = laborServices.map((laborService) => {
+            const subCategory = subCategories.find(
+                (subCategory) =>
+                    subCategory.id === laborService.service.subCatId
+            );
+            return {
+                ...laborService,
+                subCategory,
+            };
+        });
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -141,6 +156,21 @@ export const getLaborServiceById = async (req, res, next) => {
         if (!laborService) {
             throw new NotFoundError(`No service with id: ${id}`);
         }
+
+        // get subCategory
+        const subCategory = await prisma.sub_Category.findUnique({
+            where: {
+                id: laborService.service.subCatId,
+            },
+        });
+
+        // service with subCategory
+        const serviceWithSubCategory = {
+            ...laborService,
+            subCategory,
+        };
+
+        res.status(httpStatusCodes.OK).json(serviceWithSubCategory);
 
         res.status(httpStatusCodes.OK).json(laborService);
     } catch (error) {
@@ -175,7 +205,22 @@ export const getLaborServicesByUserId = async (req, res, next) => {
             throw new NotFoundError(`No service with for user id: ${id}`);
         }
 
-        res.status(httpStatusCodes.OK).json(laborServices);
+        // get all subCategories
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = laborServices.map((laborService) => {
+            const subCategory = subCategories.find(
+                (subCategory) =>
+                    subCategory.id === laborService.service.subCatId
+            );
+            return {
+                ...laborService,
+                subCategory,
+            };
+        });
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }

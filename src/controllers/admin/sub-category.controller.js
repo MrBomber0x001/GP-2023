@@ -87,8 +87,22 @@ export const getAllSubCat = async (req, res, next) => {
     try {
         const AllSubCategorys = await prisma.sub_Category.findMany({});
 
+        // Get all Categorys
+        const AllCategorys = await prisma.category.findMany({});
+
+        // join subCategorys with categorys
+        const subCategorysWithCategorys = AllSubCategorys.map((subCategory) => {
+            const category = AllCategorys.find(
+                (category) => category.id === subCategory.catId
+            );
+            return {
+                ...subCategory,
+                category: category,
+            };
+        });
+
         res.status(httpStatusCodes.OK).json({
-            AllSubCategorys,
+            subCategorysWithCategorys,
         });
     } catch (error) {
         next(error);
@@ -125,8 +139,22 @@ export const getAllSubCatForCat = async (req, res, next) => {
             where: { catId: id },
         });
 
+        // Get all Categorys
+        const AllCategorys = await prisma.category.findMany({});
+
+        // join subCategorys with categorys
+        const subCategorysWithCategorys = AllSubCategorys.map((subCategory) => {
+            const category = AllCategorys.find(
+                (category) => category.id === subCategory.catId
+            );
+            return {
+                ...subCategory,
+                category: category,
+            };
+        });
+
         res.status(httpStatusCodes.OK).json({
-            AllSubCategorys,
+            subCategorysWithCategorys,
         });
     } catch (error) {
         next(error);
