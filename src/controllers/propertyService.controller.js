@@ -175,7 +175,24 @@ export const getAllPropertyServices = async (req, res, next) => {
             throw new NotFoundError("No services found!");
         }
 
-        res.status(httpStatusCodes.OK).json(propertyServices);
+        // get all subcategory
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = propertyServices.map(
+            (propertyService) => {
+                const subCategory = subCategories.find(
+                    (subCategory) =>
+                        subCategory.id === propertyService.service.subCatId
+                );
+                return {
+                    ...propertyService,
+                    subCategory,
+                };
+            }
+        );
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -204,8 +221,21 @@ export const getPropertyServiceById = async (req, res, next) => {
             );
         }
 
+        // get subcategory
+        const subCategory = await prisma.sub_Category.findUnique({
+            where: {
+                id: propertyService.service.subCatId,
+            },
+        });
+
+        // property with subcategory
+        const serviceWithSubCategory = {
+            ...propertyService,
+            subCategory,
+        };
+
         res.status(httpStatusCodes.OK).json({
-            data: propertyService,
+            serviceWithSubCategory,
         });
     } catch (error) {
         next(error);
@@ -239,7 +269,24 @@ export const getPropertyServicesByUserId = async (req, res, next) => {
             throw new NotFoundError(`No service with for user id: ${id}`);
         }
 
-        res.status(httpStatusCodes.OK).json(propertyService);
+        // get all subcategory
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = propertyServices.map(
+            (propertyService) => {
+                const subCategory = subCategories.find(
+                    (subCategory) =>
+                        subCategory.id === propertyService.service.subCatId
+                );
+                return {
+                    ...propertyService,
+                    subCategory,
+                };
+            }
+        );
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -477,3 +524,4 @@ export const deletePropertyService = async (req, res, next) => {
         next(error);
     }
 };
+

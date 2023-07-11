@@ -169,9 +169,23 @@ export const getAllStoreServices = async (req, res, next) => {
         if (!storeServices) {
             throw new NotFoundError("No services found!");
         }
-        res.status(httpStatusCodes.OK).json({
-            storeServices,
+
+        // get all subcategory
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = storeServices.map((storeService) => {
+            const subCategory = subCategories.find(
+                (subCategory) =>
+                    subCategory.id === storeService.service.subCatId
+            );
+            return {
+                ...storeService,
+                subCategory,
+            };
         });
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -192,8 +206,19 @@ export const getStoreServiceById = async (req, res, next) => {
             throw new NotFoundError("StoreService not found!");
         }
 
+        // get subCategory
+        const subCategory = await prisma.sub_Category.findUnique({
+            where: { id: storeService.service.subCatId },
+        });
+
+        // store with subCategory
+        const serviceWithSubCategory = {
+            ...storeService,
+            subCategory,
+        };
+
         res.status(httpStatusCodes.OK).json({
-            storeService,
+            serviceWithSubCategory,
         });
     } catch (error) {
         next(error);
@@ -227,7 +252,22 @@ export const getStoreServicesByUserId = async (req, res, next) => {
             throw new NotFoundError(`No service with for user id: ${id}`);
         }
 
-        res.status(httpStatusCodes.OK).json(storeServices);
+        // get all subcategory
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = storeServices.map((storeService) => {
+            const subCategory = subCategories.find(
+                (subCategory) =>
+                    subCategory.id === storeService.service.subCatId
+            );
+            return {
+                ...storeService,
+                subCategory,
+            };
+        });
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }

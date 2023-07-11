@@ -191,7 +191,6 @@ export const createContractorService = async (req, res, next) => {
 export const getAllContractorServices = async (req, res, next) => {
     try {
         const { city } = req.query;
-
         let contractorServices = [];
 
         if (city) {
@@ -215,7 +214,24 @@ export const getAllContractorServices = async (req, res, next) => {
             throw new NotFoundError("No services found!");
         }
 
-        res.status(httpStatusCodes.OK).json(contractorServices);
+        // get all subCategories
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = contractorServices.map(
+            (contractorService) => {
+                const subCategory = subCategories.find(
+                    (subCategory) =>
+                        subCategory.id === contractorService.service.subCatId
+                );
+                return {
+                    ...contractorService,
+                    subCategory,
+                };
+            }
+        );
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -249,8 +265,19 @@ export const getContractorServiceById = async (req, res, next) => {
             throw new NotFoundError("ContractorService not found!");
         }
 
+        // get subCategory
+        const subCategory = await prisma.sub_Category.findUnique({
+            where: { id: contractorService.service.subCatId },
+        });
+
+        // contractor with subCategory
+        const serviceWithSubCategory = {
+            ...contractorService,
+            subCategory,
+        };
+
         res.status(httpStatusCodes.OK).json({
-            data: contractorService,
+            serviceWithSubCategory,
         });
     } catch (error) {
         next(error);
@@ -284,7 +311,24 @@ export const getContractorServicesByUserId = async (req, res, next) => {
             throw new NotFoundError(`No service with for user id: ${id}`);
         }
 
-        res.status(httpStatusCodes.OK).json(contractorService);
+        // get all subCategories
+        const subCategories = await prisma.sub_Category.findMany();
+
+        // get all services with subCategories
+        const servicesWithSubCategorys = contractorServices.map(
+            (contractorService) => {
+                const subCategory = subCategories.find(
+                    (subCategory) =>
+                        subCategory.id === contractorService.service.subCatId
+                );
+                return {
+                    ...contractorService,
+                    subCategory,
+                };
+            }
+        );
+
+        res.status(httpStatusCodes.OK).json(servicesWithSubCategorys);
     } catch (error) {
         next(error);
     }
@@ -546,3 +590,4 @@ export const deleteContractorService = async (req, res, next) => {
         next(error);
     }
 };
+
