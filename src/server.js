@@ -19,6 +19,7 @@ import storeServiceRoute from "./routes/v1/storeService.routes.js";
 import laborServiceRoute from "./routes/v1/laborService.routes.js";
 import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
 import propertyServiceRoute from "./routes/v1/propertyService.routes.js";
+import serviceRoute from "./routes/v1/service.routes.js";
 
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
@@ -56,6 +57,7 @@ app.use("/api/v1/service", storeServiceRoute);
 app.use("/api/v1/service", laborServiceRoute);
 app.use("/api/v1/service", contracorServiceRoute);
 app.use("/api/v1/service", propertyServiceRoute);
+app.use("/api/v1/service", serviceRoute);
 
 // Not found middleware
 app.use(notFound);
