@@ -18,6 +18,7 @@ model User {
   password  String    
   image     String?    
   location  String?   @db.VarChar(150)
+  phone     String?   @db.VarChar(150)
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
