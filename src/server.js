@@ -20,6 +20,7 @@ import laborServiceRoute from "./routes/v1/laborService.routes.js";
 import contracorServiceRoute from "./routes/v1/contractorService.routes.js";
 import propertyServiceRoute from "./routes/v1/propertyService.routes.js";
 import serviceRoute from "./routes/v1/service.routes.js";
+import userRoute from "./routes/v1/user.routes.js";
 
 import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
@@ -58,6 +59,7 @@ app.use("/api/v1/service", laborServiceRoute);
 app.use("/api/v1/service", contracorServiceRoute);
 app.use("/api/v1/service", propertyServiceRoute);
 app.use("/api/v1/service", serviceRoute);
+app.use("/api/v1/user", userRoute);
 
 // Not found middleware
 app.use(notFound);
@@ -69,4 +71,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
-
