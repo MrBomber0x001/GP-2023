@@ -23,6 +23,34 @@ export const getServicesBySubCatId = async (req, res, next) => {
             },
         });
 
+        services.forEach((service) => {
+            if (service.LaborServices.length > 0) {
+                service["service"] = service.LaborServices[0];
+                delete service.LaborServices;
+                delete service.StoreServices;
+                delete service.PropertyServices;
+                delete service.ContractorServices;
+            } else if (service.StoreServices.length > 0) {
+                service["service"] = service.StoreServices[0];
+                delete service.LaborServices;
+                delete service.StoreServices;
+                delete service.PropertyServices;
+                delete service.ContractorServices;
+            } else if (service.PropertyServices.length > 0) {
+                service["service"] = service.PropertyServices[0];
+                delete service.LaborServices;
+                delete service.StoreServices;
+                delete service.PropertyServices;
+                delete service.ContractorServices;
+            } else if (service.ContractorServices.length > 0) {
+                service["service"] = service.ContractorServices[0];
+                delete service.LaborServices;
+                delete service.StoreServices;
+                delete service.PropertyServices;
+                delete service.ContractorServices;
+            }
+        });
+
         // get the sub category
         const subCategory = await prisma.sub_Category.findFirst({
             where: {
@@ -31,7 +59,10 @@ export const getServicesBySubCatId = async (req, res, next) => {
         });
 
         res.status(httpStatusCodes.OK).json({
-            subCategory,
+            id: subCategory.id,
+            name: subCategory.name,
+            image: subCategory.image,
+            catId: subCategory.catId,
             services,
         });
     } catch (error) {
