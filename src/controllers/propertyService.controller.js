@@ -106,11 +106,11 @@ export const createPropertyService = async (req, res, next) => {
         const imagePath = req.file ? req.file.path : null;
 
         // get relative path if image path not null
-        const imageRelativePath = imagePath
+        const tempImageRelativePath = imagePath
             ? path.relative(path.join(dirname, "../.."), imagePath)
             : null;
 
-        console.log(imageRelativePath);
+        const imageRelativePath = tempImageRelativePath.replace("src", "");
 
         // create new service
         const service = await prisma.service.create({
@@ -127,7 +127,7 @@ export const createPropertyService = async (req, res, next) => {
 
         const propertyService = await prisma.propertyService.create({
             data: {
-                image: `/${imageRelativePath}`,
+                image: imageRelativePath,
                 price,
                 sellerCity,
                 sellerArea,
@@ -405,10 +405,12 @@ export const updatePropertyService = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = `/${path.relative(
+            const tempImageRelativePath = path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            )}`;
+            );
+
+            imageRelativePath = tempImageRelativePath.replace("src", "");
         }
 
         console.log(imageRelativePath);
