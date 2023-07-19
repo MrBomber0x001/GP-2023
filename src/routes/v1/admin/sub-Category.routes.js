@@ -3,7 +3,6 @@ import express from "express";
 import {
     CreateSubCat,
     getAllSubCat,
-    getAllSubCatForCat,
     getSubCatByName,
     updateSubCat,
     deleteSubCat,
@@ -27,8 +26,7 @@ router
 router
     .route("/subCategory/:id")
     .put(isAuthenticated, isAdmin, upload.single("image"), updateSubCat)
-    .delete(isAuthenticated, isAdmin, deleteSubCat)
-    .get(getAllSubCatForCat);
+    .delete(isAuthenticated, isAdmin, deleteSubCat);
 
 export default router;
 

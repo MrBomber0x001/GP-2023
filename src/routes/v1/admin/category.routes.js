@@ -1,6 +1,7 @@
 import express from "express";
 import {
     getAllCategories,
+    getAllSubCatForCat,
     getCategoryById,
     getCategoryByName,
     createCategory,
@@ -25,6 +26,8 @@ router
 router
     .route("/categories/:id")
     .delete(isAuthenticated, isAdmin, deleteCategory);
+
+router.route("/categories/subCategory/:id").get(getAllSubCatForCat);
 
 export default router;
 

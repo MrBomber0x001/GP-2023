@@ -111,58 +111,6 @@ export const getAllSubCat = async (req, res, next) => {
 
 /**
  * @Author Shefo
- * @desc Get all Sub-Category based on a category
- * @access public
- * @method GET
- * @endpoint `base/admin/subCategory`
- * @returns {object} status, data
- */
-export const getAllSubCatForCat = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-
-        // Check required fields
-        if (!id) {
-            throw new BadRequestError("Category Id is Required!");
-        }
-
-        // Check if category exist
-        const cat = await prisma.category.findUnique({
-            where: { id: id },
-        });
-        if (!cat) {
-            throw new BadRequestError("Category does not exist!");
-        }
-
-        // Get all subCategorys
-        const AllSubCategorys = await prisma.sub_Category.findMany({
-            where: { catId: id },
-        });
-
-        // Get all Categorys
-        const AllCategorys = await prisma.category.findMany({});
-
-        // join subCategorys with categorys
-        const subCategorysWithCategorys = AllSubCategorys.map((subCategory) => {
-            const category = AllCategorys.find(
-                (category) => category.id === subCategory.catId
-            );
-            return {
-                ...subCategory,
-                category: category,
-            };
-        });
-
-        res.status(httpStatusCodes.OK).json({
-            subCategorysWithCategorys,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-/**
- * @Author Shefo
  * @desc get Sub-Category by name
  * @access public
  * @method GET
