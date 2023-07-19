@@ -58,7 +58,7 @@ app.use("/api/v1/service", storeServiceRoute);
 app.use("/api/v1/service", laborServiceRoute);
 app.use("/api/v1/service", contracorServiceRoute);
 app.use("/api/v1/service", propertyServiceRoute);
-app.use("/api/v1/service", serviceRoute);
+app.use("/api/v1/subCategory", serviceRoute);
 app.use("/api/v1/user", userRoute);
 
 // Not found middleware
@@ -71,3 +71,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`:rocket: server is running on port ${PORT}`);
 });
+

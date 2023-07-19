@@ -1,8 +1,6 @@
 import express from "express";
 
-import {
-    getServicesBySubCatId,
-} from "../../controllers/service.controller.js";
+import { getServicesBySubCatId } from "../../controllers/service.controller.js";
 
 const router = express.Router();
 
