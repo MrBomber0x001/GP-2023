@@ -102,10 +102,12 @@ export const updateUserById = async (req, res, next) => {
             const newImagePath = req.file.path;
 
             // get relative path
-            imageRelativePath = `/${path.relative(
+            const tempImageRelativePath = path.relative(
                 path.join(dirname, "../.."),
                 newImagePath
-            )}`;
+            );
+
+            imageRelativePath = tempImageRelativePath.replace("src", "");
         }
 
         // update user
@@ -131,3 +133,4 @@ export const updateUserById = async (req, res, next) => {
         next(error);
     }
 };
+
