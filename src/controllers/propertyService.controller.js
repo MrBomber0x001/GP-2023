@@ -221,6 +221,11 @@ export const getPropertyServiceById = async (req, res, next) => {
             );
         }
 
+        // get user info
+        const user = await prisma.user.findUnique({
+            where: { id: propertyService.service.userId },
+        });
+
         // get subcategory
         const subCategory = await prisma.sub_Category.findUnique({
             where: {
@@ -229,13 +234,14 @@ export const getPropertyServiceById = async (req, res, next) => {
         });
 
         // property with subcategory
-        const serviceWithSubCategory = {
+        const serviceWithSubCategoryWithUser = {
             ...propertyService,
             subCategory,
+            user,
         };
 
         res.status(httpStatusCodes.OK).json({
-            serviceWithSubCategory,
+            serviceWithSubCategoryWithUser,
         });
     } catch (error) {
         next(error);

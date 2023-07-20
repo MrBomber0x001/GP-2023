@@ -157,6 +157,11 @@ export const getLaborServiceById = async (req, res, next) => {
             throw new NotFoundError(`No service with id: ${id}`);
         }
 
+        // get user info
+        const user = await prisma.user.findUnique({
+            where: { id: laborService.service.userId },
+        });
+
         // get subCategory
         const subCategory = await prisma.sub_Category.findUnique({
             where: {
@@ -168,6 +173,7 @@ export const getLaborServiceById = async (req, res, next) => {
         const serviceWithSubCategory = {
             ...laborService,
             subCategory,
+            user,
         };
 
         res.status(httpStatusCodes.OK).json(serviceWithSubCategory);

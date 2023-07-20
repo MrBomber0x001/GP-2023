@@ -265,6 +265,11 @@ export const getContractorServiceById = async (req, res, next) => {
             throw new NotFoundError("ContractorService not found!");
         }
 
+        // get user info
+        const user = await prisma.user.findUnique({
+            where: { id: contractorService.service.userId },
+        });
+
         // get subCategory
         const subCategory = await prisma.sub_Category.findUnique({
             where: { id: contractorService.service.subCatId },
@@ -274,6 +279,7 @@ export const getContractorServiceById = async (req, res, next) => {
         const serviceWithSubCategory = {
             ...contractorService,
             subCategory,
+            user,
         };
 
         res.status(httpStatusCodes.OK).json({

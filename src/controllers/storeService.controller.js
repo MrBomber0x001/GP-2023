@@ -206,6 +206,11 @@ export const getStoreServiceById = async (req, res, next) => {
             throw new NotFoundError("StoreService not found!");
         }
 
+        // get user info
+        const user = await prisma.user.findUnique({
+            where: { id: storeService.service.userId },
+        });
+
         // get subCategory
         const subCategory = await prisma.sub_Category.findUnique({
             where: { id: storeService.service.subCatId },
@@ -215,6 +220,7 @@ export const getStoreServiceById = async (req, res, next) => {
         const serviceWithSubCategory = {
             ...storeService,
             subCategory,
+            user,
         };
 
         res.status(httpStatusCodes.OK).json({
