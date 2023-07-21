@@ -69,3 +69,96 @@ export const getServicesBySubCatId = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getAllServicesInAllCategory = async (req, res, next) => {
+    try {
+        const stores = await prisma.storeService.findMany({
+            include: {
+                service: true,
+            },
+        });
+
+        const labors = await prisma.laborService.findMany({
+            include: {
+                service: true,
+            },
+        });
+
+        const properties = await prisma.propertyService.findMany({
+            include: {
+                service: true,
+            },
+        });
+
+        const contractors = await prisma.contractorService.findMany({
+            include: {
+                service: true,
+            },
+        });
+
+        const categories = await prisma.category.findMany();
+
+        const subCategories = await prisma.sub_Category.findMany();
+
+        const users = await prisma.user.findMany();
+
+        // now for every service , add object for each one of this (category, sub category, user)
+        stores.forEach((store) => {
+            store["category"] = categories.find(
+                (category) => category.id === store.service.catId
+            );
+            store["subCategory"] = subCategories.find(
+                (subCategory) => subCategory.id === store.service.subCatId
+            );
+            store["user"] = users.find(
+                (user) => user.id === store.service.userId
+            );
+        });
+
+        labors.forEach((labor) => {
+            labor["category"] = categories.find(
+                (category) => category.id === labor.service.catId
+            );
+            labor["subCategory"] = subCategories.find(
+                (subCategory) => subCategory.id === labor.service.subCatId
+            );
+            labor["user"] = users.find(
+                (user) => user.id === labor.service.userId
+            );
+        });
+
+        properties.forEach((property) => {
+            property["category"] = categories.find(
+                (category) => category.id === property.service.catId
+            );
+            property["subCategory"] = subCategories.find(
+                (subCategory) => subCategory.id === property.service.subCatId
+            );
+            property["user"] = users.find(
+                (user) => user.id === property.service.userId
+            );
+        });
+
+        contractors.forEach((contractor) => {
+            contractor["category"] = categories.find(
+                (category) => category.id === contractor.service.catId
+            );
+            contractor["subCategory"] = subCategories.find(
+                (subCategory) => subCategory.id === contractor.service.subCatId
+            );
+            contractor["user"] = users.find(
+                (user) => user.id === contractor.service.userId
+            );
+        });
+
+        //now join all the services in random order
+        const services = [...stores, ...labors, ...properties, ...contractors];
+
+        res.status(httpStatusCodes.OK).json({
+            services,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
