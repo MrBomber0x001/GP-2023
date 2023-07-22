@@ -10,10 +10,11 @@ import { isAuthenticated } from "../../middlewares/auth.js";
 
 const router = express.Router();
 
-router.route("/:id").get(isAuthenticated, getUserById);
+router.route("/:id").get(getUserById);
 
 router
     .route("/:id")
     .put(isAuthenticated, upload.single("image"), updateUserById);
 
 export default router;
+
