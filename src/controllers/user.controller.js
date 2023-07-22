@@ -13,17 +13,11 @@ const dirname = path.dirname(filename);
 
 export const getUserById = async (req, res, next) => {
     try {
-        const loggedUser = req.user;
-
         // validate id
         const id = req.params.id;
 
         if (!id) {
             throw new BadRequestError("id is required");
-        }
-
-        if (loggedUser.id !== id) {
-            throw new BadRequestError("you can't access this user");
         }
 
         const user = await prisma.user.findUnique({
